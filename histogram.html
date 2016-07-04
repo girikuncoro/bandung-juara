@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+.bar rect {
+  fill: steelblue;
+}
+.bar rect:hover {
+  fill: brown;
+}
+.title {
+  font: 13px sans-serif;
+}
+div.tooltip {
+  line-height: 1;
+  padding: 9px;
+  background: rgba(255, 255, 255, 0.9);
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 1px;
+  border-color: rgb(189, 195, 199);
+  font: 13px sans-serif;
+  color: rgb(44, 62, 80);
+}
+span.time {
+  display: block;
+  margin-bottom: 4px;
+}
+span.value {
+  display: block;
+}
+.axis path {
+  display: none;
+}
+.axis-y .tick line {
+  opacity: 0.1;
+
+}
+
+</style>
+<body>
+<script src="//d3js.org/d3.v4.min.js"></script>
+<script>
+const PATH = 'data/panic.csv';
+
+var parseDate = d3.timeParse("%m/%d/%y %H:%M"),
+    formatCount = d3.format(",.0f"),
+    months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+var margin = {top: 10, right: 30, bottom: 30, left: 30},
+    width = 960 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+
+var x = d3.scaleTime()
+    .domain([new Date(2015, 0, 1), new Date(2015, 11, 31)])
+    .rangeRound([0, width]);
+
+var y = d3.scaleLinear()
+    .range([height, 0]);
+
+var histogram = d3.histogram()
+    .value(function(d) { return d.start_time; })
+    .domain(x.domain())
+    .thresholds(x.ticks(d3.timeWeek));
+
+var tooltip = d3.select("body")
+  .append("div")
+    .attr("class", "tooltip")
+    .style("position", "absolute")
+    .style("z-index", "10")
+    .style("visibility", "hidden")
+    .html("<span class='time'></span><span class='value'></span>");
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+d3.csv(PATH, type, function(error, data) {
+  if (error) throw error;
+
+  console.log(data);
+
+  var bins = histogram(data);
+
+  y.domain([0, 1.2 * d3.max(bins, function(d) { console.log(d); return d.length; })]);
+
+  svg.append("g")
+    .attr("class", "axis axis-x")
+    .attr("transform", "translate(0," + (height + 5) + ")")
+    .call(d3.axisBottom(x).tickSizeInner(0));
+
+  svg.append("g")
+    .attr("class", "axis axis-y")
+    .call(d3.axisLeft(y).tickSizeInner(-width).tickSizeOuter(0));
+
+  var bar = svg.selectAll(".bar")
+      .data(bins)
+    .enter().append("g")
+      .attr("class", "bar")
+      .attr("transform", function(d) { return "translate(" + x(d.x0) + "," + y(d.length) + ")"; });
+
+  bar.append("rect")
+      .attr("x", 1)
+      .attr("width", function(d) { return x(d.x1) - x(d.x0) - 1; })
+      .attr("height", function(d) { return height - y(d.length); })
+      .on("mouseover", displayTip)
+      .on("mousemove", function(d){ return tooltip.style("top", y(d.length) - 50 + "px").style("left",(event.pageX -50)+"px"); })
+      .on("mouseout", function(){ return tooltip.style("visibility", "hidden"); });
+
+  svg.append("text")
+      .attr("class", "title")
+      .attr("dy", 6)
+      .text("Panic Button Occurence");
+});
+
+function type(d) {
+  d.start_time = parseDate(d.start_time);
+  d.end_time = parseDate(d.end_time);
+  return d;
+}
+
+function displayTip(d) {
+  d3.select(".tooltip span.time").text(function() {
+      if(d.x0.getMonth() === d.x1.getMonth()) {
+        return d.x0.getDate() + " - " + d.x1.getDate() + " " + months[d.x1.getMonth()];
+      } else {
+        return d.x0.getDate() + " " + months[d.x0.getMonth()] + " - " + d.x1.getDate() + " " + months[d.x1.getMonth()];
+      }
+    });
+  d3.select(".tooltip span.value").html("pressed <b>" + d.length + "</b> times");
+  return tooltip.style("visibility", "visible");
+}
+
+</script>
