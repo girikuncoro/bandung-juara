@@ -29,11 +29,17 @@ span.time {
 span.value {
   display: block;
 }
+.axis path {
+  display: none;
+}
+.axis-y .tick line {
+  opacity: 0.1;
+
+}
 
 </style>
 <body>
 <script src="//d3js.org/d3.v4.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js"></script>
 <script>
 const PATH = 'data/panic.csv';
 
@@ -46,7 +52,7 @@ var margin = {top: 10, right: 30, bottom: 30, left: 30},
     height = 500 - margin.top - margin.bottom;
 
 var x = d3.scaleTime()
-    .domain([new Date(2015, 0, 1), new Date(2016, 0, 1)])
+    .domain([new Date(2015, 0, 1), new Date(2015, 11, 31)])
     .rangeRound([0, width]);
 
 var y = d3.scaleLinear()
@@ -82,12 +88,12 @@ d3.csv(PATH, type, function(error, data) {
 
   svg.append("g")
     .attr("class", "axis axis-x")
-    .attr("transform", "translate(0," + height + ")")
-    .call(d3.axisBottom(x));
+    .attr("transform", "translate(0," + (height + 5) + ")")
+    .call(d3.axisBottom(x).tickSizeInner(0));
 
   svg.append("g")
     .attr("class", "axis axis-y")
-    .call(d3.axisLeft(y));
+    .call(d3.axisLeft(y).tickSizeInner(-width).tickSizeOuter(0));
 
   var bar = svg.selectAll(".bar")
       .data(bins)
