@@ -621,17 +621,3 @@ $(document).ready(function(){
     }
 
 });
-
-$(document).ready(function(){
-    // Bootgrid config for data table
-    $("#data-table-basic").bootgrid({
-        css: {
-            icon: 'zmdi icon',
-            iconColumns: 'zmdi-view-module',
-            iconDown: 'zmdi-sort-amount-desc',
-            iconRefresh: 'zmdi-refresh',
-            iconUp: 'zmdi-sort-amount-asc'
-        },
-        caseSensitive: false
-    });
-});

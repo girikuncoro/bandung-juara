@@ -13,47 +13,6 @@
   <!-- CSS -->
   <link href="css/app-1.css" rel="stylesheet">
   <link href="css/app-2.css" rel="stylesheet">
-  <style>
-
-    .bar rect {
-      fill: #FFC107;
-    }
-    .bar rect:hover {
-      fill: #FFE082;
-    }
-    #panic-tooltip {
-      line-height: 1;
-      padding: 9px;
-      background: rgba(255, 255, 255, 1.0);
-      border-style: solid;
-      border-width: 1px;
-      border-radius: 1px;
-      border-color: #fff;
-      -webkit-box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.175);
-      box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.175);
-      font: 13px inherit;
-      color: #212121;
-    }
-    #panic-tooltip span.time {
-      display: block;
-      margin-bottom: 4px;
-    }
-    #panic-tooltip span.value {
-      display: block;
-    }
-    .axis path {
-      display: none;
-    }
-    .axis text {
-      fill: #AEAEAE;
-      font-family: inherit;
-    }
-    .axis-y .tick line {
-      opacity: 0.1;
-      stroke-dasharray: 2,2;
-    }
-
-  </style>
 
 </head>
 <body>
@@ -172,9 +131,7 @@
                   </div>
 
                   <div class="card-body">
-                      <div id="panic-histo">
-                          <!-- <div id="curved-line-chart" class="flot-chart "></div> -->
-                      </div>
+                      <div id="panic-histo"></div>
                   </div>
               </div>
 
@@ -190,113 +147,12 @@
                       <table id="data-table-basic" class="table table-striped">
                           <thead>
                           <tr>
-                              <th data-column-id="id" data-type="numeric">ID</th>
-                              <th data-column-id="name">Name</th>
                               <th data-column-id="date" data-order="desc">Date</th>
+                              <th data-column-id="name">Name</th>
+                              <th data-column-id="address">Address</th>
                           </tr>
                           </thead>
-                          <tbody>
-                          <tr>
-                              <td>10238</td>
-                              <td>Asep Munawir</td>
-                              <td>14.10.2015</td>
-                          </tr>
-                          <tr>
-                              <td>10243</td>
-                              <td>Asep Munawir</td>
-                              <td>19.10.2015</td>
-                          </tr>
-                          <tr>
-                              <td>10248</td>
-                              <td>Asep Munawir</td>
-                              <td>24.10.2015</td>
-                          </tr>
-                          <tr>
-                              <td>10253</td>
-                              <td>Asep Munawir</td>
-                              <td>29.10.2015</td>
-                          </tr>
-                          <tr>
-                              <td>10234</td>
-                              <td>Budi Raharjo</td>
-                              <td>10.10.2015</td>
-                          </tr>
-                          <tr>
-                              <td>10239</td>
-                              <td>Budi Raharjo</td>
-                              <td>15.10.2015</td>
-                          </tr>
-                          <tr>
-                              <td>10244</td>
-                              <td>Budi Raharjo</td>
-                              <td>20.10.2015</td>
-                          </tr>
-                          <tr>
-                              <td>10249</td>
-                              <td>Budi Raharjo</td>
-                              <td>25.10.2015</td>
-                          </tr>
-                          <tr>
-                              <td>10237</td>
-                              <td>Tutun Juhana</td>
-                              <td>13.10.2015</td>
-                          </tr>
-                          <tr>
-                              <td>10242</td>
-                              <td>Tutun Juhana</td>
-                              <td>18.10.2015</td>
-                          </tr>
-                          <tr>
-                              <td>10247</td>
-                              <td>Tutun Juhana</td>
-                              <td>23.10.2015</td>
-                          </tr>
-                          <tr>
-                              <td>10252</td>
-                              <td>Tutun Juhana</td>
-                              <td>28.10.2015</td>
-                          </tr>
-                          <tr>
-                              <td>10236</td>
-                              <td>Robert Juara</td>
-                              <td>12.10.2015</td>
-                          </tr>
-                          <tr>
-                              <td>10241</td>
-                              <td>Robert Juara</td>
-                              <td>17.10.2015</td>
-                          </tr>
-                          <tr>
-                              <td>10246</td>
-                              <td>Robert Juara</td>
-                              <td>22.10.2015</td>
-                          </tr>
-                          <tr>
-                              <td>10251</td>
-                              <td>Robert Juara</td>
-                              <td>27.10.2015</td>
-                          </tr>
-                          <tr>
-                              <td>10235</td>
-                              <td>Mang Oeded</td>
-                              <td>11.10.2015</td>
-                          </tr>
-                          <tr>
-                              <td>10240</td>
-                              <td>Mang Oeded</td>
-                              <td>16.10.2015</td>
-                          </tr>
-                          <tr>
-                              <td>10245</td>
-                              <td>Mang Oeded</td>
-                              <td>21.10.2015</td>
-                          </tr>
-                          <tr>
-                              <td>10250</td>
-                              <td>Mang Oeded</td>
-                              <td>26.10.2015</td>
-                          </tr>
-                          </tbody>
+                          <tbody id="panic-table"></tbody>
                       </table>
                   </div>
               </div>
@@ -334,118 +190,8 @@
   <script src="vendors/bootgrid/jquery.bootgrid.updated.min.js"></script>
 
   <!-- Application script -->
-  <script src="js/app.js"></script>
-
-  <script>
-    const PATH = 'data/panic.csv';
-
-    var parseDate = d3.timeParse("%m/%d/%y %H:%M"),
-        formatCount = d3.format(",.0f"),
-        months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-
-    var margin = {top: 10, right: 30, bottom: 30, left: 40},
-        width = parseInt(d3.select("#panic-histo").style("width"), 10),
-        width = width - margin.left - margin.right,
-        height = 200 - margin.top - margin.bottom;
-
-    var x = d3.scaleTime()
-        .domain([new Date(2015, 0, 1), new Date(2015, 11, 31)])
-        .rangeRound([0, width]);
-
-    var y = d3.scaleLinear()
-        .range([height, 0]);
-
-    var histogram = d3.histogram()
-        .value(function(d) { return d.start_time; })
-        .domain(x.domain())
-        .thresholds(x.ticks(d3.timeWeek));
-
-    var tooltip = d3.select("#panic-histo").append("div")
-        .attr("id", "panic-tooltip")
-        .style("position", "absolute")
-        .style("z-index", "9999")
-        .style("visibility", "hidden")
-        .html("<span class='time'></span><span class='value'></span>");
-
-    var svg = d3.select("#panic-histo").append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-      .append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-    d3.csv(PATH, type, function(error, data) {
-      if (error) throw error;
-
-      var bins = histogram(data);
-
-      y.domain([0, 1.2 * d3.max(bins, function(d) { return d.length; })]);
-
-      svg.append("g")
-        .attr("class", "axis axis-x")
-        .attr("transform", "translate(0," + (height + 5) + ")")
-        .call(d3.axisBottom(x).tickSizeInner(0).tickFormat(d3.timeFormat("%b")));
-
-      svg.append("g")
-        .attr("class", "axis axis-y")
-        .call(d3.axisLeft(y).tickSizeInner(-width).tickSizeOuter(0).tickValues([0,50,100,150]));
-
-      var bar = svg.selectAll(".bar")
-          .data(bins)
-        .enter().append("g")
-          .attr("class", "bar")
-          .attr("transform", function(d) { return "translate(" + x(d.x0) + "," + y(d.length) + ")"; });
-
-      bar.append("rect")
-          .attr("x", 1)
-          .attr("width", function(d) { return x(d.x1) - x(d.x0) - 1; })
-          .attr("height", function(d) { return height - y(d.length); })
-          .on("mouseover", displayTip)
-          .on("mousemove", function(d){ return tooltip.style("top", (y(d.length)+10) + "px").style("left",(event.pageX-width/3)+"px"); })
-          .on("mouseout", function(){ return tooltip.style("visibility", "hidden"); });
-    });
-
-    d3.select(window).on('resize', resize);
-
-    function type(d) {
-      d.start_time = parseDate(d.start_time);
-      d.end_time = parseDate(d.end_time);
-      return d;
-    }
-
-    function displayTip(d) {
-      d3.select("#panic-tooltip > span.time").text(function() {
-          if(d.x0.getMonth() === d.x1.getMonth()) {
-            return d.x0.getDate() + " - " + d.x1.getDate() + " " + months[d.x1.getMonth()] + " " + d.x0.getFullYear();
-          } else {
-            return d.x0.getDate() + " " + months[d.x0.getMonth()] + " - " + d.x1.getDate() + " " + months[d.x1.getMonth()] + " " + d.x0.getFullYear();
-          }
-        });
-      d3.select("#panic-tooltip > span.value").html("pressed <b>" + d.length + "</b> times");
-      return tooltip.style("visibility", "visible");
-    }
-
-    function resize() {
-      // update width
-      width = parseInt(d3.select('#panic-histo').style('width'), 10);
-      width = width - margin.left - margin.right;
-
-      // resize the chart
-      x.rangeRound([0, width]);
-      d3.select("#panic-histo svg")
-          .attr('width', (width + margin.left + margin.right) + 'px');
-
-      svg.selectAll('.bar')
-        .attr("transform", function(d) { return "translate(" + x(d.x0) + "," + y(d.length) + ")"; });
-      svg.selectAll('rect')
-          .attr("width", function(d) { return x(d.x1) - x(d.x0) - 1; })
-          .on("mousemove", function(d){ return tooltip.style("top", (y(d.length)+10) + "px").style("left",(event.pageX-width/3)+"px"); });
-
-      // update axes
-      svg.select('.axis.axis-x').call(d3.axisBottom(x).tickSizeInner(0).tickFormat(d3.timeFormat("%b")));
-      svg.select('.axis.axis-y').call(d3.axisLeft(y).tickSizeInner(-width).tickSizeOuter(0).tickValues([0,50,100,150]));
-    }
-
-  </script>
+  <script src="js/app-1.js"></script>
+  <script src="js/app-2.js"></script>
 
 </body>
 </html>
