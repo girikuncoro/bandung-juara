@@ -1,136 +1,316 @@
 <!DOCTYPE html>
-<meta charset="utf-8">
-<style>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Bandung Command Center</title>
 
-.bar rect {
-  fill: steelblue;
-}
-.bar rect:hover {
-  fill: brown;
-}
-.title {
-  font: 13px sans-serif;
-}
-div.tooltip {
-  line-height: 1;
-  padding: 9px;
-  background: rgba(255, 255, 255, 0.9);
-  border-style: solid;
-  border-width: 1px;
-  border-radius: 1px;
-  border-color: rgb(189, 195, 199);
-  font: 13px sans-serif;
-  color: rgb(44, 62, 80);
-}
-span.time {
-  display: block;
-  margin-bottom: 4px;
-}
-span.value {
-  display: block;
-}
-.axis path {
-  display: none;
-}
-.axis-y .tick line {
-  opacity: 0.1;
+        <!-- Vendor CSS -->
+        <link href="vendors/bower_components/animate.css/animate.min.css" rel="stylesheet">
+        <link href="vendors/bower_components/material-design-iconic-font/dist/css/material-design-iconic-font.min.css" rel="stylesheet">
+        <link href="vendors/bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.min.css" rel="stylesheet">
+        <link href="vendors/bootgrid/jquery.bootgrid.min.css" rel="stylesheet">
 
-}
+        <!-- CSS -->
+        <link href="css/app-1.css" rel="stylesheet">
+        <link href="css/app-2.css" rel="stylesheet">
 
-</style>
-<body>
-<script src="//d3js.org/d3.v4.min.js"></script>
-<script>
-const PATH = 'data/panic.csv';
+    </head>
+    <body>
+        <header id="header" class="clearfix" data-ma-theme="blue">
+            <ul class="h-inner">
+                <li class="hi-trigger ma-trigger" data-ma-action="sidebar-open" data-ma-target="#sidebar">
+                    <div class="line-wrap">
+                        <div class="line top"></div>
+                        <div class="line center"></div>
+                        <div class="line bottom"></div>
+                    </div>
+                </li>
 
-var parseDate = d3.timeParse("%m/%d/%y %H:%M"),
-    formatCount = d3.format(",.0f"),
-    months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                <li class="hi-logo hidden-xs">
+                    <a href="index.html">Bandung Command Center</a>
+                </li>
+            </ul>
 
-var margin = {top: 10, right: 30, bottom: 30, left: 30},
-    width = 960 - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom;
+        </header>
 
-var x = d3.scaleTime()
-    .domain([new Date(2015, 0, 1), new Date(2015, 11, 31)])
-    .rangeRound([0, width]);
+        <section id="main">
+            <aside id="sidebar" class="sidebar c-overflow">
+                <div class="s-profile">
+                    <a href="" data-ma-action="profile-menu-toggle">
+                        <div class="sp-pic">
+                            <img src="img/profile-pics/1.jpg" alt="">
+                        </div>
 
-var y = d3.scaleLinear()
-    .range([height, 0]);
+                        <div class="sp-info">
+                            Ridwan Kamil
 
-var histogram = d3.histogram()
-    .value(function(d) { return d.start_time; })
-    .domain(x.domain())
-    .thresholds(x.ticks(d3.timeWeek));
+                            <i class="zmdi zmdi-caret-down"></i>
+                        </div>
+                    </a>
 
-var tooltip = d3.select("body")
-  .append("div")
-    .attr("class", "tooltip")
-    .style("position", "absolute")
-    .style("z-index", "10")
-    .style("visibility", "hidden")
-    .html("<span class='time'></span><span class='value'></span>");
+                    <ul class="main-menu">
+                        <li>
+                            <a href=""><i class="zmdi zmdi-time-restore"></i> Logout</a>
+                        </li>
+                    </ul>
+                </div>
 
-var svg = d3.select("body").append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-  .append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+                <ul class="main-menu">
+                    <li class="active">
+                        <a href="index.html"><i class="zmdi zmdi-home"></i> Home</a>
+                    </li>
+                    <li class="sub-menu">
+                        <a href="" data-ma-action="submenu-toggle"><i class="zmdi zmdi-view-compact"></i> Analytics</a>
 
-d3.csv(PATH, type, function(error, data) {
-  if (error) throw error;
+                        <ul>
+                            <li><a href="#">Panic Button</a></li>
+                            <li><a href="#">Birth/Infant</a></li>
+                            <li><a href="#">Crimes</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </aside>
 
-  console.log(data);
+            <section id="content">
+                <div class="container">
+                    <div class="block-header">
+                        <h2>Dashboard</h2>
 
-  var bins = histogram(data);
+                        <ul class="actions">
+                            <li>
+                                <a href="">
+                                    <i class="zmdi zmdi-trending-up"></i>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="">
+                                    <i class="zmdi zmdi-check-all"></i>
+                                </a>
+                            </li>
+                            <li class="dropdown">
+                                <a href="" data-toggle="dropdown">
+                                    <i class="zmdi zmdi-more-vert"></i>
+                                </a>
 
-  y.domain([0, 1.2 * d3.max(bins, function(d) { console.log(d); return d.length; })]);
+                                <ul class="dropdown-menu dropdown-menu-right">
+                                    <li>
+                                        <a href="">Refresh</a>
+                                    </li>
+                                    <li>
+                                        <a href="">Manage Widgets</a>
+                                    </li>
+                                    <li>
+                                        <a href="">Widgets Settings</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
 
-  svg.append("g")
-    .attr("class", "axis axis-x")
-    .attr("transform", "translate(0," + (height + 5) + ")")
-    .call(d3.axisBottom(x).tickSizeInner(0));
+                    </div>
 
-  svg.append("g")
-    .attr("class", "axis axis-y")
-    .call(d3.axisLeft(y).tickSizeInner(-width).tickSizeOuter(0));
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>Panic Button Statistics <small>Daily occurence throughout the city</small></h2>
 
-  var bar = svg.selectAll(".bar")
-      .data(bins)
-    .enter().append("g")
-      .attr("class", "bar")
-      .attr("transform", function(d) { return "translate(" + x(d.x0) + "," + y(d.length) + ")"; });
+                            <ul class="actions">
+                                <li class="dropdown">
+                                    <a href="" data-toggle="dropdown">
+                                        <i class="zmdi zmdi-more-vert"></i>
+                                    </a>
 
-  bar.append("rect")
-      .attr("x", 1)
-      .attr("width", function(d) { return x(d.x1) - x(d.x0) - 1; })
-      .attr("height", function(d) { return height - y(d.length); })
-      .on("mouseover", displayTip)
-      .on("mousemove", function(d){ return tooltip.style("top", y(d.length) - 50 + "px").style("left",(event.pageX -50)+"px"); })
-      .on("mouseout", function(){ return tooltip.style("visibility", "hidden"); });
+                                    <ul class="dropdown-menu dropdown-menu-right">
+                                        <li>
+                                            <a href="">Change Date Range</a>
+                                        </li>
+                                        <li>
+                                            <a href="">Change Graph Type</a>
+                                        </li>
+                                        <li>
+                                            <a href="">Other Settings</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
 
-  svg.append("text")
-      .attr("class", "title")
-      .attr("dy", 6)
-      .text("Panic Button Occurence");
-});
+<!--                         <div class="card-body">
+                            <div class="chart-edge">
+                                <div id="curved-line-chart" class="flot-chart "></div>
+                            </div>
+                        </div> -->
+                    </div>
 
-function type(d) {
-  d.start_time = parseDate(d.start_time);
-  d.end_time = parseDate(d.end_time);
-  return d;
-}
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>Panic Button Record
+                                <small>Record table sorted from the most recent panic button occurence.
+                                </small>
+                            </h2>
+                        </div>
 
-function displayTip(d) {
-  d3.select(".tooltip span.time").text(function() {
-      if(d.x0.getMonth() === d.x1.getMonth()) {
-        return d.x0.getDate() + " - " + d.x1.getDate() + " " + months[d.x1.getMonth()];
-      } else {
-        return d.x0.getDate() + " " + months[d.x0.getMonth()] + " - " + d.x1.getDate() + " " + months[d.x1.getMonth()];
-      }
-    });
-  d3.select(".tooltip span.value").html("pressed <b>" + d.length + "</b> times");
-  return tooltip.style("visibility", "visible");
-}
+                        <div class="table-responsive">
+                            <table id="data-table-basic" class="table table-striped">
+                                <thead>
+                                <tr>
+                                    <th data-column-id="id" data-type="numeric">ID</th>
+                                    <th data-column-id="name">Name</th>
+                                    <th data-column-id="date" data-order="desc">Date</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>10238</td>
+                                    <td>Asep Munawir</td>
+                                    <td>14.10.2015</td>
+                                </tr>
+                                <tr>
+                                    <td>10243</td>
+                                    <td>Asep Munawir</td>
+                                    <td>19.10.2015</td>
+                                </tr>
+                                <tr>
+                                    <td>10248</td>
+                                    <td>Asep Munawir</td>
+                                    <td>24.10.2015</td>
+                                </tr>
+                                <tr>
+                                    <td>10253</td>
+                                    <td>Asep Munawir</td>
+                                    <td>29.10.2015</td>
+                                </tr>
+                                <tr>
+                                    <td>10234</td>
+                                    <td>Budi Raharjo</td>
+                                    <td>10.10.2015</td>
+                                </tr>
+                                <tr>
+                                    <td>10239</td>
+                                    <td>Budi Raharjo</td>
+                                    <td>15.10.2015</td>
+                                </tr>
+                                <tr>
+                                    <td>10244</td>
+                                    <td>Budi Raharjo</td>
+                                    <td>20.10.2015</td>
+                                </tr>
+                                <tr>
+                                    <td>10249</td>
+                                    <td>Budi Raharjo</td>
+                                    <td>25.10.2015</td>
+                                </tr>
+                                <tr>
+                                    <td>10237</td>
+                                    <td>Tutun Juhana</td>
+                                    <td>13.10.2015</td>
+                                </tr>
+                                <tr>
+                                    <td>10242</td>
+                                    <td>Tutun Juhana</td>
+                                    <td>18.10.2015</td>
+                                </tr>
+                                <tr>
+                                    <td>10247</td>
+                                    <td>Tutun Juhana</td>
+                                    <td>23.10.2015</td>
+                                </tr>
+                                <tr>
+                                    <td>10252</td>
+                                    <td>Tutun Juhana</td>
+                                    <td>28.10.2015</td>
+                                </tr>
+                                <tr>
+                                    <td>10236</td>
+                                    <td>Robert Juara</td>
+                                    <td>12.10.2015</td>
+                                </tr>
+                                <tr>
+                                    <td>10241</td>
+                                    <td>Robert Juara</td>
+                                    <td>17.10.2015</td>
+                                </tr>
+                                <tr>
+                                    <td>10246</td>
+                                    <td>Robert Juara</td>
+                                    <td>22.10.2015</td>
+                                </tr>
+                                <tr>
+                                    <td>10251</td>
+                                    <td>Robert Juara</td>
+                                    <td>27.10.2015</td>
+                                </tr>
+                                <tr>
+                                    <td>10235</td>
+                                    <td>Mang Oeded</td>
+                                    <td>11.10.2015</td>
+                                </tr>
+                                <tr>
+                                    <td>10240</td>
+                                    <td>Mang Oeded</td>
+                                    <td>16.10.2015</td>
+                                </tr>
+                                <tr>
+                                    <td>10245</td>
+                                    <td>Mang Oeded</td>
+                                    <td>21.10.2015</td>
+                                </tr>
+                                <tr>
+                                    <td>10250</td>
+                                    <td>Mang Oeded</td>
+                                    <td>26.10.2015</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </section>
 
-</script>
+        <footer id="footer">
+            Copyright &copy; 2016 Bandung Command Center
+
+            <ul class="f-menu">
+                <li><a href="">Support</a></li>
+                <li><a href="">Contact</a></li>
+            </ul>
+        </footer>
+
+        <!-- Page Loader -->
+        <div class="page-loader">
+            <div class="preloader pls-blue">
+                <svg class="pl-circular" viewBox="25 25 50 50">
+                    <circle class="plc-path" cx="50" cy="50" r="20" />
+                </svg>
+
+                <p>Please wait...</p>
+            </div>
+        </div>
+
+        <!-- Javascript Libraries -->
+        <script src="vendors/bower_components/jquery/dist/jquery.min.js"></script>
+        <script src="vendors/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+        <script src="vendors/bower_components/Waves/dist/waves.min.js"></script>
+        <script src="vendors/bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js"></script>
+        <script src="vendors/bootgrid/jquery.bootgrid.updated.min.js"></script>
+
+        <script src="js/app.js"></script>
+
+        <!-- Data Table -->
+        <script type="text/javascript">
+            $(document).ready(function(){
+                //Basic Example
+                $("#data-table-basic").bootgrid({
+                    css: {
+                        icon: 'zmdi icon',
+                        iconColumns: 'zmdi-view-module',
+                        iconDown: 'zmdi-sort-amount-desc',
+                        iconRefresh: 'zmdi-refresh',
+                        iconUp: 'zmdi-sort-amount-asc'
+                    },
+                    caseSensitive: false
+                });
+            });
+        </script>
+    </body>
+  </html>

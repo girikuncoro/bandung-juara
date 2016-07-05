@@ -1,0 +1,22 @@
+{
+  "name": "vendors",
+  "homepage": "https://github.com/girikuncoro/bandung-juara",
+  "authors": [
+    "girikuncoro <girikuncoro@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "moduleType": [],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "animate.css": "~3.5.2",
+    "material-design-iconic-font": "~2.2.0"
+  }
+}
