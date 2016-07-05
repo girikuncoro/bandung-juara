@@ -3273,3 +3273,45 @@ html.ie9 .mCS-minimal-dark.mCSB_scrollTools_onDrag .mCSB_dragger .mCSB_dragger_b
 .mCSB_inside > .mCSB_container {
   margin-right: 0;
 }
+
+/*--------------------------------------------------
+    Visualization Style
+    Used for panic data.
+---------------------------------------------------*/
+.bar rect {
+  fill: #FFC107;
+}
+.bar rect:hover {
+  fill: #FFE082;
+}
+#panic-tooltip {
+  line-height: 1;
+  padding: 9px;
+  background: rgba(255, 255, 255, 1.0);
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 1px;
+  border-color: #fff;
+  -webkit-box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.175);
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.175);
+  font: 13px inherit;
+  color: #212121;
+}
+#panic-tooltip span.time {
+  display: block;
+  margin-bottom: 4px;
+}
+#panic-tooltip span.value {
+  display: block;
+}
+.axis path {
+  display: none;
+}
+.axis text {
+  fill: #AEAEAE;
+  font-family: inherit;
+}
+.axis-y .tick line {
+  opacity: 0.1;
+  stroke-dasharray: 2,2;
+}

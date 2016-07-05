@@ -1,316 +1,197 @@
 <!DOCTYPE html>
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Bandung Command Center</title>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bandung Command Center</title>
 
-        <!-- Vendor CSS -->
-        <link href="vendors/bower_components/animate.css/animate.min.css" rel="stylesheet">
-        <link href="vendors/bower_components/material-design-iconic-font/dist/css/material-design-iconic-font.min.css" rel="stylesheet">
-        <link href="vendors/bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.min.css" rel="stylesheet">
-        <link href="vendors/bootgrid/jquery.bootgrid.min.css" rel="stylesheet">
+  <!-- Vendor CSS -->
+  <link href="vendors/bower_components/animate.css/animate.min.css" rel="stylesheet">
+  <link href="vendors/bower_components/material-design-iconic-font/dist/css/material-design-iconic-font.min.css" rel="stylesheet">
+  <link href="vendors/bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.min.css" rel="stylesheet">
+  <link href="vendors/bootgrid/jquery.bootgrid.min.css" rel="stylesheet">
 
-        <!-- CSS -->
-        <link href="css/app-1.css" rel="stylesheet">
-        <link href="css/app-2.css" rel="stylesheet">
+  <!-- CSS -->
+  <link href="css/app-1.css" rel="stylesheet">
+  <link href="css/app-2.css" rel="stylesheet">
 
-    </head>
-    <body>
-        <header id="header" class="clearfix" data-ma-theme="blue">
-            <ul class="h-inner">
-                <li class="hi-trigger ma-trigger" data-ma-action="sidebar-open" data-ma-target="#sidebar">
-                    <div class="line-wrap">
-                        <div class="line top"></div>
-                        <div class="line center"></div>
-                        <div class="line bottom"></div>
-                    </div>
-                </li>
+</head>
+<body>
+  <header id="header" class="clearfix" data-ma-theme="blue">
+      <ul class="h-inner">
+          <li class="hi-trigger ma-trigger" data-ma-action="sidebar-open" data-ma-target="#sidebar">
+              <div class="line-wrap">
+                  <div class="line top"></div>
+                  <div class="line center"></div>
+                  <div class="line bottom"></div>
+              </div>
+          </li>
 
-                <li class="hi-logo hidden-xs">
-                    <a href="index.html">Bandung Command Center</a>
-                </li>
-            </ul>
+          <li class="hi-logo hidden-xs">
+              <a href="index.html">Bandung Command Center</a>
+          </li>
+      </ul>
 
-        </header>
+  </header>
 
-        <section id="main">
-            <aside id="sidebar" class="sidebar c-overflow">
-                <div class="s-profile">
-                    <a href="" data-ma-action="profile-menu-toggle">
-                        <div class="sp-pic">
-                            <img src="img/profile-pics/1.jpg" alt="">
-                        </div>
+  <section id="main">
+      <aside id="sidebar" class="sidebar c-overflow">
+          <div class="s-profile">
+              <a href="" data-ma-action="profile-menu-toggle">
+                  <div class="sp-pic">
+                      <img src="img/profile-pics/1.jpg" alt="">
+                  </div>
 
-                        <div class="sp-info">
-                            Ridwan Kamil
+                  <div class="sp-info">
+                      Ridwan Kamil
 
-                            <i class="zmdi zmdi-caret-down"></i>
-                        </div>
-                    </a>
+                      <i class="zmdi zmdi-caret-down"></i>
+                  </div>
+              </a>
 
-                    <ul class="main-menu">
-                        <li>
-                            <a href=""><i class="zmdi zmdi-time-restore"></i> Logout</a>
-                        </li>
-                    </ul>
-                </div>
+              <ul class="main-menu">
+                  <li>
+                      <a href=""><i class="zmdi zmdi-time-restore"></i> Logout</a>
+                  </li>
+              </ul>
+          </div>
 
-                <ul class="main-menu">
-                    <li class="active">
-                        <a href="index.html"><i class="zmdi zmdi-home"></i> Home</a>
-                    </li>
-                    <li class="sub-menu">
-                        <a href="" data-ma-action="submenu-toggle"><i class="zmdi zmdi-view-compact"></i> Analytics</a>
+          <ul class="main-menu">
+              <li class="active">
+                  <a href="index.html"><i class="zmdi zmdi-home"></i> Home</a>
+              </li>
+              <li class="sub-menu">
+                  <a href="" data-ma-action="submenu-toggle"><i class="zmdi zmdi-view-compact"></i> Analytics</a>
 
-                        <ul>
-                            <li><a href="#">Panic Button</a></li>
-                            <li><a href="#">Birth/Infant</a></li>
-                            <li><a href="#">Crimes</a></li>
-                        </ul>
-                    </li>
-                </ul>
-            </aside>
+                  <ul>
+                      <li><a href="#">Panic Button</a></li>
+                      <li><a href="#">Birth/Infant</a></li>
+                      <li><a href="#">Crimes</a></li>
+                  </ul>
+              </li>
+          </ul>
+      </aside>
 
-            <section id="content">
-                <div class="container">
-                    <div class="block-header">
-                        <h2>Dashboard</h2>
+      <section id="content">
+          <div class="container">
+              <div class="block-header">
+                  <h2>Dashboard</h2>
 
-                        <ul class="actions">
-                            <li>
-                                <a href="">
-                                    <i class="zmdi zmdi-trending-up"></i>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="">
-                                    <i class="zmdi zmdi-check-all"></i>
-                                </a>
-                            </li>
-                            <li class="dropdown">
-                                <a href="" data-toggle="dropdown">
-                                    <i class="zmdi zmdi-more-vert"></i>
-                                </a>
+                  <ul class="actions">
+                      <li>
+                          <a href="">
+                              <i class="zmdi zmdi-trending-up"></i>
+                          </a>
+                      </li>
+                      <li>
+                          <a href="">
+                              <i class="zmdi zmdi-check-all"></i>
+                          </a>
+                      </li>
+                      <li class="dropdown">
+                          <a href="" data-toggle="dropdown">
+                              <i class="zmdi zmdi-more-vert"></i>
+                          </a>
 
-                                <ul class="dropdown-menu dropdown-menu-right">
-                                    <li>
-                                        <a href="">Refresh</a>
-                                    </li>
-                                    <li>
-                                        <a href="">Manage Widgets</a>
-                                    </li>
-                                    <li>
-                                        <a href="">Widgets Settings</a>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
+                          <ul class="dropdown-menu dropdown-menu-right">
+                              <li>
+                                  <a href="">Refresh</a>
+                              </li>
+                              <li>
+                                  <a href="">Manage Widgets</a>
+                              </li>
+                              <li>
+                                  <a href="">Widgets Settings</a>
+                              </li>
+                          </ul>
+                      </li>
+                  </ul>
 
-                    </div>
+              </div>
 
-                    <div class="card">
-                        <div class="card-header">
-                            <h2>Panic Button Statistics <small>Daily occurence throughout the city</small></h2>
+              <div class="card">
+                  <div class="card-header">
+                      <h2>Panic Button Statistics<small>Weekly occurence throughout the city in <span><b>2015</b></span>.</small></h2>
 
-                            <ul class="actions">
-                                <li class="dropdown">
-                                    <a href="" data-toggle="dropdown">
-                                        <i class="zmdi zmdi-more-vert"></i>
-                                    </a>
+                      <ul class="actions">
+                          <li class="dropdown">
+                              <a href="" data-toggle="dropdown">
+                                  <i class="zmdi zmdi-more-vert"></i>
+                              </a>
 
-                                    <ul class="dropdown-menu dropdown-menu-right">
-                                        <li>
-                                            <a href="">Change Date Range</a>
-                                        </li>
-                                        <li>
-                                            <a href="">Change Graph Type</a>
-                                        </li>
-                                        <li>
-                                            <a href="">Other Settings</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </div>
+                              <ul class="dropdown-menu dropdown-menu-right">
+                                  <li>
+                                      <a href="">2016</a>
+                                  </li>
+                                  <li class="active">
+                                      <a href="">2015</a>
+                                  </li>
+                              </ul>
+                          </li>
+                      </ul>
+                  </div>
 
-<!--                         <div class="card-body">
-                            <div class="chart-edge">
-                                <div id="curved-line-chart" class="flot-chart "></div>
-                            </div>
-                        </div> -->
-                    </div>
+                  <div class="card-body">
+                      <div id="panic-histo"></div>
+                  </div>
+              </div>
 
-                    <div class="card">
-                        <div class="card-header">
-                            <h2>Panic Button Record
-                                <small>Record table sorted from the most recent panic button occurence.
-                                </small>
-                            </h2>
-                        </div>
+              <div class="card">
+                  <div class="card-header">
+                      <h2>Panic Button Record
+                          <small>Record table sorted from the most recent panic button occurence.
+                          </small>
+                      </h2>
+                  </div>
 
-                        <div class="table-responsive">
-                            <table id="data-table-basic" class="table table-striped">
-                                <thead>
-                                <tr>
-                                    <th data-column-id="id" data-type="numeric">ID</th>
-                                    <th data-column-id="name">Name</th>
-                                    <th data-column-id="date" data-order="desc">Date</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr>
-                                    <td>10238</td>
-                                    <td>Asep Munawir</td>
-                                    <td>14.10.2015</td>
-                                </tr>
-                                <tr>
-                                    <td>10243</td>
-                                    <td>Asep Munawir</td>
-                                    <td>19.10.2015</td>
-                                </tr>
-                                <tr>
-                                    <td>10248</td>
-                                    <td>Asep Munawir</td>
-                                    <td>24.10.2015</td>
-                                </tr>
-                                <tr>
-                                    <td>10253</td>
-                                    <td>Asep Munawir</td>
-                                    <td>29.10.2015</td>
-                                </tr>
-                                <tr>
-                                    <td>10234</td>
-                                    <td>Budi Raharjo</td>
-                                    <td>10.10.2015</td>
-                                </tr>
-                                <tr>
-                                    <td>10239</td>
-                                    <td>Budi Raharjo</td>
-                                    <td>15.10.2015</td>
-                                </tr>
-                                <tr>
-                                    <td>10244</td>
-                                    <td>Budi Raharjo</td>
-                                    <td>20.10.2015</td>
-                                </tr>
-                                <tr>
-                                    <td>10249</td>
-                                    <td>Budi Raharjo</td>
-                                    <td>25.10.2015</td>
-                                </tr>
-                                <tr>
-                                    <td>10237</td>
-                                    <td>Tutun Juhana</td>
-                                    <td>13.10.2015</td>
-                                </tr>
-                                <tr>
-                                    <td>10242</td>
-                                    <td>Tutun Juhana</td>
-                                    <td>18.10.2015</td>
-                                </tr>
-                                <tr>
-                                    <td>10247</td>
-                                    <td>Tutun Juhana</td>
-                                    <td>23.10.2015</td>
-                                </tr>
-                                <tr>
-                                    <td>10252</td>
-                                    <td>Tutun Juhana</td>
-                                    <td>28.10.2015</td>
-                                </tr>
-                                <tr>
-                                    <td>10236</td>
-                                    <td>Robert Juara</td>
-                                    <td>12.10.2015</td>
-                                </tr>
-                                <tr>
-                                    <td>10241</td>
-                                    <td>Robert Juara</td>
-                                    <td>17.10.2015</td>
-                                </tr>
-                                <tr>
-                                    <td>10246</td>
-                                    <td>Robert Juara</td>
-                                    <td>22.10.2015</td>
-                                </tr>
-                                <tr>
-                                    <td>10251</td>
-                                    <td>Robert Juara</td>
-                                    <td>27.10.2015</td>
-                                </tr>
-                                <tr>
-                                    <td>10235</td>
-                                    <td>Mang Oeded</td>
-                                    <td>11.10.2015</td>
-                                </tr>
-                                <tr>
-                                    <td>10240</td>
-                                    <td>Mang Oeded</td>
-                                    <td>16.10.2015</td>
-                                </tr>
-                                <tr>
-                                    <td>10245</td>
-                                    <td>Mang Oeded</td>
-                                    <td>21.10.2015</td>
-                                </tr>
-                                <tr>
-                                    <td>10250</td>
-                                    <td>Mang Oeded</td>
-                                    <td>26.10.2015</td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </section>
+                  <div class="table-responsive">
+                      <table id="data-table-basic" class="table table-striped">
+                          <thead>
+                          <tr>
+                              <th data-column-id="date" data-order="desc">Date</th>
+                              <th data-column-id="name">Name</th>
+                              <th data-column-id="address">Address</th>
+                          </tr>
+                          </thead>
+                          <tbody id="panic-table"></tbody>
+                      </table>
+                  </div>
+              </div>
+          </div>
+      </section>
+  </section>
 
-        <footer id="footer">
-            Copyright &copy; 2016 Bandung Command Center
+  <footer id="footer">
+      Copyright &copy; 2016 Bandung Command Center
 
-            <ul class="f-menu">
-                <li><a href="">Support</a></li>
-                <li><a href="">Contact</a></li>
-            </ul>
-        </footer>
+      <ul class="f-menu">
+          <li><a href="">Support</a></li>
+          <li><a href="">Contact</a></li>
+      </ul>
+  </footer>
 
-        <!-- Page Loader -->
-        <div class="page-loader">
-            <div class="preloader pls-blue">
-                <svg class="pl-circular" viewBox="25 25 50 50">
-                    <circle class="plc-path" cx="50" cy="50" r="20" />
-                </svg>
+  <!-- Page Loader -->
+  <div class="page-loader">
+      <div class="preloader pls-blue">
+          <svg class="pl-circular" viewBox="25 25 50 50">
+              <circle class="plc-path" cx="50" cy="50" r="20" />
+          </svg>
 
-                <p>Please wait...</p>
-            </div>
-        </div>
+          <p>Please wait...</p>
+      </div>
+  </div>
 
-        <!-- Javascript Libraries -->
-        <script src="vendors/bower_components/jquery/dist/jquery.min.js"></script>
-        <script src="vendors/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+  <!-- Javascript Libraries -->
+  <script src="vendors/bower_components/jquery/dist/jquery.min.js"></script>
+  <script src="vendors/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script src="vendors/bower_components/d3/d3.min.js"></script>
 
-        <script src="vendors/bower_components/Waves/dist/waves.min.js"></script>
-        <script src="vendors/bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js"></script>
-        <script src="vendors/bootgrid/jquery.bootgrid.updated.min.js"></script>
+  <script src="vendors/bower_components/Waves/dist/waves.min.js"></script>
+  <script src="vendors/bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js"></script>
+  <script src="vendors/bootgrid/jquery.bootgrid.updated.min.js"></script>
 
-        <script src="js/app.js"></script>
+  <!-- Application script -->
+  <script src="js/app-1.js"></script>
+  <script src="js/app-2.js"></script>
 
-        <!-- Data Table -->
-        <script type="text/javascript">
-            $(document).ready(function(){
-                //Basic Example
-                $("#data-table-basic").bootgrid({
-                    css: {
-                        icon: 'zmdi icon',
-                        iconColumns: 'zmdi-view-module',
-                        iconDown: 'zmdi-sort-amount-desc',
-                        iconRefresh: 'zmdi-refresh',
-                        iconUp: 'zmdi-sort-amount-asc'
-                    },
-                    caseSensitive: false
-                });
-            });
-        </script>
-    </body>
-  </html>
+</body>
+</html>
