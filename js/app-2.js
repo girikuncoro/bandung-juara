@@ -32,7 +32,13 @@ var svg = d3.select("#panic-histo").append("svg")
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-d3.csv('data/panic.csv', type, function(error, data) {
+var stats = {},
+    earliestDate = Date.now(),
+    latestDate = 0,
+    totalDuration = 0,
+    users = {};
+
+d3.csv('data/panic.csv', processData, function(error, data) {
   if (error) throw error;
 
   var bins = histogram(data);
@@ -62,18 +68,33 @@ d3.csv('data/panic.csv', type, function(error, data) {
       .on("mousemove", function(d){ return tooltip.style("top", (y(d.length)+10) + "px").style("left",(event.pageX-width/3)+"px"); })
       .on("mouseout", function(){ return tooltip.style("visibility", "hidden"); });
 
-  // populate data table
-  data.forEach(function(d) {
-    $("#panic-table").append("<tr><td>" + formatDate(d.start_time) + "</td><td>" + d.name + "</td><td>" + d.address + "</td></tr>");
-  });
   initTable();
+
+  var oneDay = 24*60*60*1000;
+
+  stats.totalClicks = data.length;
+  stats.totalDays = Math.round(Math.abs((latestDate - earliestDate)/(oneDay)));
+  stats.avgPerDay = (stats.totalClicks / stats.totalDays).toFixed(3);
+  stats.uniqueUsers = Object.keys(users).length;
+  stats.avgTimeCompletion = Math.round(totalDuration / stats.totalClicks / 60 / 1000); // in minutes
+
+  console.log(stats);
 });
 
 d3.select(window).on('resize', resize);
 
-function type(d) {
+function processData(d) {
   d.start_time = parseDate(d.start_time);
   d.end_time = parseDate(d.end_time);
+
+  // preprocess for stats calculation
+  earliestDate = d.start_time.getTime() < earliestDate ? d.start_time.getTime() : earliestDate;
+  latestDate = d.start_time.getTime() > latestDate ? d.start_time.getTime() : latestDate;
+  users[d.name] = true;
+  totalDuration += d.end_time - d.start_time;
+
+  // populate data table
+  $("#panic-table").append("<tr><td>" + formatDate(d.start_time) + "</td><td>" + d.name + "</td><td>" + d.address + "</td></tr>");
   return d;
 }
 
