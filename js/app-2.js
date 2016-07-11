@@ -240,25 +240,46 @@ function sortDistricts(districts) {
 }
 
 function populateLocation(sortedDistricts, total=5) {
-  console.log(sortedDistricts);
   // default top 5 locations
+  var maxShow = 10;
+
   for(var i = 0; i < total; i++) {
+    appendDistrict(sortedDistricts[i], i);
+  }
+
+  $('.show-more').on('click', function() {
+    if($(this).hasClass('show-less')) {
+      for(var i = total; i < maxShow; i++) {
+        $("#top-locations div.list-group-item").last().remove();
+      }
+      $(this).removeClass('show-less').html('View More');
+      return;
+    }
+
+    for(var i = total; i < maxShow; i++) {
+      appendDistrict(sortedDistricts[i], i);
+    }
+    $('.view-more.locations').addClass('show-less').html('View Less');
+  });
+
+  function appendDistrict(data, idx) {
     $("#top-locations").append('\
-      <div class="list-group-item media">\
-        <div class="pull-left">\
-          ' + (i+1) + '\
-        </div>\
-        <div class="lgi-heading m-l-5">' + sortedDistricts[i].district + '</div>\
-          <div class="pull-right">' + sortedDistricts[i].count + '</div>\
-            <div class="media-body">\
-              <div class="progress">\
-                <div class="progress-bar" role="progressbar" aria-valuenow="' + sortedDistricts[i].count + '" aria-valuemin="0" aria-valuemax="100" style="width: ' + sortedDistricts[i].count + '%">\
+        <div class="list-group-item media">\
+          <div class="pull-left">\
+            ' + (idx+1) + '\
+          </div>\
+          <div class="lgi-heading m-l-5">' + data.district + '</div>\
+            <div class="pull-right">' + data.count + ' clicks</div>\
+              <div class="media-body">\
+                <div class="progress">\
+                  <div class="progress-bar" role="progressbar" aria-valuenow="' + sortedDistricts[i].count + '" aria-valuemin="0" aria-valuemax="100" style="width: ' + sortedDistricts[i].count + '%">\
+                  </div>\
                 </div>\
               </div>\
-            </div>\
-        </div>');
+          </div>');
   }
 }
+
 
 /*-------------------------------------------
     Sparkline
