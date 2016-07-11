@@ -56,14 +56,14 @@
           </div>
 
           <ul class="main-menu">
-              <li class="active">
+              <li>
                   <a href="index.html"><i class="zmdi zmdi-home"></i> Home</a>
               </li>
-              <li class="sub-menu">
+              <li class="sub-menu active toggled">
                   <a href="" data-ma-action="submenu-toggle"><i class="zmdi zmdi-view-compact"></i> Analytics</a>
 
                   <ul>
-                      <li><a href="#">Panic Button</a></li>
+                      <li class="active"><a href="#">Panic Button</a></li>
                       <li><a href="#">Birth/Infant</a></li>
                       <li><a href="#">Crimes</a></li>
                   </ul>
@@ -74,7 +74,7 @@
       <section id="content">
           <div class="container">
               <div class="block-header">
-                  <h2>Dashboard</h2>
+                  <h2>Panic Button Analytics - <span>2015</span></h2>
 
                   <ul class="actions">
                       <li>
@@ -94,13 +94,10 @@
 
                           <ul class="dropdown-menu dropdown-menu-right">
                               <li>
-                                  <a href="">Refresh</a>
+                                  <a href="">2016</a>
                               </li>
-                              <li>
-                                  <a href="">Manage Widgets</a>
-                              </li>
-                              <li>
-                                  <a href="">Widgets Settings</a>
+                              <li class="active">
+                                  <a href="">2015</a>
                               </li>
                           </ul>
                       </li>
@@ -112,7 +109,7 @@
                   <div class="card-header">
                       <h2>Panic Button Statistics<small>Weekly occurence throughout the city in <span><b>2015</b></span>.</small></h2>
 
-                      <ul class="actions">
+<!--                       <ul class="actions">
                           <li class="dropdown">
                               <a href="" data-toggle="dropdown">
                                   <i class="zmdi zmdi-more-vert"></i>
@@ -127,12 +124,64 @@
                                   </li>
                               </ul>
                           </li>
-                      </ul>
+                      </ul> -->
                   </div>
 
                   <div class="card-body">
                       <div id="panic-histo"></div>
                   </div>
+              </div>
+
+              <div class="mini-charts">
+                <div class="row">
+                    <div class="col-sm-6 col-md-3">
+                      <div class="mini-charts-item bgm-lightgreen">
+                          <div class="clearfix">
+                              <div class="chart stats-bar-clicks"></div>
+                              <div class="count">
+                                  <small>Total Clicks</small>
+                                  <h2 id="sum-clicks"></h2>
+                              </div>
+                          </div>
+                      </div>
+                    </div>
+
+                    <div class="col-sm-6 col-md-3">
+                      <div class="mini-charts-item bgm-purple">
+                          <div class="clearfix">
+                              <div class="chart stats-bar-avg-clicks"></div>
+                              <div class="count">
+                                  <small>Avg Clicks/Day</small>
+                                  <h2 id="sum-avg-clicks"></h2>
+                              </div>
+                          </div>
+                      </div>
+                    </div>
+
+                    <div class="col-sm-6 col-md-3">
+                      <div class="mini-charts-item bgm-orange">
+                          <div class="clearfix">
+                              <div class="chart stats-line-unique-users"></div>
+                              <div class="count">
+                                  <small>Unique Users</small>
+                                  <h2 id="sum-unique-users"></h2>
+                              </div>
+                          </div>
+                      </div>
+                    </div>
+
+                    <div class="col-sm-6 col-md-3">
+                      <div class="mini-charts-item bgm-bluegray">
+                          <div class="clearfix">
+                              <div class="chart stats-line-avg-time"></div>
+                              <div class="count">
+                                  <small>Avg Completion</small>
+                                  <h2 id="sum-avg-time"></h2>
+                              </div>
+                          </div>
+                      </div>
+                    </div>
+                </div>
               </div>
 
               <div class="card">
@@ -185,6 +234,7 @@
   <script src="vendors/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
   <script src="vendors/bower_components/d3/d3.min.js"></script>
 
+  <script src="vendors/sparklines/jquery.sparkline.min.js"></script>
   <script src="vendors/bower_components/Waves/dist/waves.min.js"></script>
   <script src="vendors/bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js"></script>
   <script src="vendors/bootgrid/jquery.bootgrid.updated.min.js"></script>
