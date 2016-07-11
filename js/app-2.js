@@ -35,9 +35,12 @@ var svg = d3.select("#panic-histo").append("svg")
 var stats = { lifetime: { totalDuration: 0 } },
     earliestDate = Date.now(),
     latestDate = 0,
-    users = { lifetime: {} };
+    users = { lifetime: {} },
+    countDistricts = {};
 
 var oneDay = 24*60*60*1000;
+
+d3.select(window).on('resize', resize);
 
 d3.csv('data/panic.csv', processData, function(error, data) {
   if (error) throw error;
@@ -91,9 +94,11 @@ d3.csv('data/panic.csv', processData, function(error, data) {
   }
 
   populateSummary(stats);
-});
 
-d3.select(window).on('resize', resize);
+  var sortedDistricts = sortDistricts(countDistricts);
+  populateLocation(sortedDistricts);
+  console.log(sortedDistricts);
+});
 
 function processData(d) {
   d.start_time = parseDate(d.start_time);
@@ -133,6 +138,19 @@ function processData(d) {
   }
   users.lifetime[d.name] = true;
   users[d.year][d.month][d.name] = true;
+
+  // parse address data
+  var addr = d.address.split(",");
+  if(addr[0] !== "") {
+    d.district = addr[1].trim();
+    d.city = addr[2].toLowerCase().trim();
+    d.zipcode = addr[3].replace(/\D/g, '');
+
+    d.inBandung = d.city === "kota bandung" ? true : false;
+
+    if(d.inBandung)
+      countDistricts[d.district] = countDistricts[d.district] ? countDistricts[d.district] + 1 : 1;
+  }
 
   // populate data table
   $("#panic-table").append("<tr><td>" + formatDate(d.start_time) + "</td><td>" + d.name + "</td><td>" + d.address + "</td></tr>");
@@ -210,6 +228,56 @@ function populateSummary(stats) {
   sparklineBar('stats-bar-avg-clicks', stats[stats.lifetime.latestYear].avgPerDay, '35px', 4, '#fff', 2);
   sparklineLine('stats-line-unique-users', stats[stats.lifetime.latestYear].uniqueUsers, 68, 35, '#fff', 'rgba(0,0,0,0)', 1.25, 'rgba(255,255,255,0.4)', 'rgba(255,255,255,0.4)', 'rgba(255,255,255,0.4)', 3, '#fff', 'rgba(255,255,255,0.4)');
   sparklineLine('stats-line-avg-time', stats[stats.lifetime.latestYear].avgTimeCompletion, 68, 35, '#fff', 'rgba(0,0,0,0)', 1.25, 'rgba(255,255,255,0.4)', 'rgba(255,255,255,0.4)', 'rgba(255,255,255,0.4)', 3, '#fff', 'rgba(255,255,255,0.4)');
+}
+
+function sortDistricts(districts) {
+  var res = [];
+  for(var dis in districts) {
+    res.push({ district: dis, count: districts[dis] });
+  }
+  res.sort(function(a,b) { return b.count - a.count; });
+  return res;
+}
+
+function populateLocation(sortedDistricts, total=5) {
+  // default top 5 locations
+  var maxShow = 10;
+
+  for(var i = 0; i < total; i++) {
+    appendDistrict(sortedDistricts[i], i);
+  }
+
+  $('.show-more').on('click', function() {
+    if($(this).hasClass('show-less')) {
+      for(var i = total; i < maxShow; i++) {
+        $("#top-locations div.list-group-item").last().remove();
+      }
+      $(this).removeClass('show-less').html('View More');
+      return;
+    }
+
+    for(var i = total; i < maxShow; i++) {
+      appendDistrict(sortedDistricts[i], i);
+    }
+    $('.view-more.locations').addClass('show-less').html('View Less');
+  });
+
+  function appendDistrict(data, idx) {
+    $("#top-locations").append('\
+        <div class="list-group-item media">\
+          <div class="pull-left">\
+            ' + (idx+1) + '\
+          </div>\
+          <div class="lgi-heading m-l-5">' + data.district + '</div>\
+            <div class="pull-right">' + data.count + ' clicks</div>\
+              <div class="media-body">\
+                <div class="progress">\
+                  <div class="progress-bar" role="progressbar" aria-valuenow="' + sortedDistricts[i].count + '" aria-valuemin="0" aria-valuemax="100" style="width: ' + sortedDistricts[i].count + '%">\
+                  </div>\
+                </div>\
+              </div>\
+          </div>');
+  }
 }
 
 
