@@ -96,6 +96,7 @@ d3.csv('data/panic.csv', processData, function(error, data) {
   populateSummary(stats);
 
   var sortedDistricts = sortDistricts(countDistricts);
+  populateLocation(sortedDistricts);
   console.log(sortedDistricts);
 });
 
@@ -141,7 +142,7 @@ function processData(d) {
   // parse address data
   var addr = d.address.split(",");
   if(addr[0] !== "") {
-    d.district = addr[1].toLowerCase().trim();
+    d.district = addr[1].trim();
     d.city = addr[2].toLowerCase().trim();
     d.zipcode = addr[3].replace(/\D/g, '');
 
@@ -236,6 +237,27 @@ function sortDistricts(districts) {
   }
   res.sort(function(a,b) { return b.count - a.count; });
   return res;
+}
+
+function populateLocation(sortedDistricts, total=5) {
+  console.log(sortedDistricts);
+  // default top 5 locations
+  for(var i = 0; i < total; i++) {
+    $("#top-locations").append('\
+      <div class="list-group-item media">\
+        <div class="pull-left">\
+          ' + (i+1) + '\
+        </div>\
+        <div class="lgi-heading m-l-5">' + sortedDistricts[i].district + '</div>\
+          <div class="pull-right">' + sortedDistricts[i].count + '</div>\
+            <div class="media-body">\
+              <div class="progress">\
+                <div class="progress-bar" role="progressbar" aria-valuenow="' + sortedDistricts[i].count + '" aria-valuemin="0" aria-valuemax="100" style="width: ' + sortedDistricts[i].count + '%">\
+                </div>\
+              </div>\
+            </div>\
+        </div>');
+  }
 }
 
 /*-------------------------------------------
