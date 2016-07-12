@@ -3290,6 +3290,12 @@ html.ie9 .mCS-minimal-dark.mCSB_scrollTools_onDrag .mCSB_dragger .mCSB_dragger_b
 .bar-24hr rect:hover {
   fill: #80CBC4;
 }
+rect.bar-weekly {
+  fill: #E91E63;
+}
+rect.bar-weekly:hover {
+  fill: #F48FB1;
+}
 #panic-tooltip {
   line-height: 1;
   padding: 9px;
@@ -3342,6 +3348,10 @@ html.ie9 .mCS-minimal-dark.mCSB_scrollTools_onDrag .mCSB_dragger .mCSB_dragger_b
   stroke-dasharray: 2,2;
 }
 .axis1-y .tick line {
+  opacity: 0.1;
+  stroke-dasharray: 2,2;
+}
+.axis2-y .tick line {
   opacity: 0.1;
   stroke-dasharray: 2,2;
 }
