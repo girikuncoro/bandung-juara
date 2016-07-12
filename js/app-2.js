@@ -2,10 +2,15 @@ var parseDate = d3.timeParse("%m/%d/%y %H:%M"),
     formatCount = d3.format(",.0f"),
     months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-var margin = {top: 10, right: 30, bottom: 30, left: 40},
-    width = parseInt(d3.select("#panic-histo").style("width"), 10),
+var margin = {top: 10, right: 30, bottom: 30, left: 40};
+
+var width = parseInt(d3.select("#panic-histo").style("width"), 10),
     width = width - margin.left - margin.right,
     height = 200 - margin.top - margin.bottom;
+
+var width1 = parseInt(d3.select("#panic-24hr").style("width"), 10),
+    width1 = width1 - margin.left - margin.right,
+    height1 = 200 - margin.top - margin.bottom;
 
 var x = d3.scaleTime()
     .domain([new Date(2015, 0, 1), new Date(2015, 11, 31)])
@@ -14,13 +19,32 @@ var x = d3.scaleTime()
 var y = d3.scaleLinear()
     .range([height, 0]);
 
+var x1 = d3.scaleTime()
+    .domain([(new Date()).setHours(0, 0, 0, 0), (new Date()).setHours(23, 59, 59, 0)])
+    .rangeRound([0, width1]);
+
+var y1 = d3.scaleLinear()
+    .range([height, 0]);
+
 var histogram = d3.histogram()
     .value(function(d) { return d.start_time; })
     .domain(x.domain())
     .thresholds(x.ticks(d3.timeWeek));
 
+var histogram1 = d3.histogram()
+    .value(function(d) { return d.time; })
+    .domain(x1.domain())
+    .thresholds(x1.ticks(d3.timeHour))
+
 var tooltip = d3.select("#panic-histo").append("div")
     .attr("id", "panic-tooltip")
+    .style("position", "absolute")
+    .style("z-index", "9999")
+    .style("visibility", "hidden")
+    .html("<span class='time'></span><span class='value'></span>");
+
+var tooltip1 = d3.select("#panic-24hr").append("div")
+    .attr("id", "panic-tooltip-24hr")
     .style("position", "absolute")
     .style("z-index", "9999")
     .style("visibility", "hidden")
@@ -32,22 +56,35 @@ var svg = d3.select("#panic-histo").append("svg")
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+var svg1 = d3.select("#panic-24hr").append("svg")
+    .attr("width", width1 + margin.left + margin.right)
+    .attr("height", height1 + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
 var stats = { lifetime: { totalDuration: 0 } },
     earliestDate = Date.now(),
     latestDate = 0,
     users = { lifetime: {} },
     countDistricts = {};
 
-var oneDay = 24*60*60*1000;
+var oneDay = 24*60*60*1000,
+    today = new Date();
+
+    today.setHours(0, 0, 0, 0);
+var todayMillis = today.getTime();
 
 d3.select(window).on('resize', resize);
 
 d3.csv('data/panic.csv', processData, function(error, data) {
   if (error) throw error;
+  console.log(data);
 
-  var bins = histogram(data);
+  var bins = histogram(data),
+      bins1 = histogram1(data);  // 24 hours bins
 
   y.domain([0, 1.2 * d3.max(bins, function(d) { return d.length; })]);
+  y1.domain([0, 1.2 * d3.max(bins1, function(d) { return d.length; })]);
 
   svg.append("g")
     .attr("class", "axis axis-x")
@@ -61,7 +98,7 @@ d3.csv('data/panic.csv', processData, function(error, data) {
   var bar = svg.selectAll(".bar")
       .data(bins)
     .enter().append("g")
-      .attr("class", "bar")
+      .attr("class", "bar-year")
       .attr("transform", function(d) { return "translate(" + x(d.x0) + "," + y(d.length) + ")"; });
 
   bar.append("rect")
@@ -69,11 +106,37 @@ d3.csv('data/panic.csv', processData, function(error, data) {
       .attr("width", function(d) { return x(d.x1) - x(d.x0) - 1; })
       .attr("height", function(d) { return height - y(d.length); })
       .on("mouseover", displayTip)
-      .on("mousemove", function(d){ return tooltip.style("top", (y(d.length)+10) + "px").style("left",(event.pageX-width/3)+"px"); })
+      .on("mousemove", function(d){ return tooltip.style("top", (y(d.length)+10) + "px").style("left",(event.pageX-margin.left-margin.right-width/3)+"px"); })
       .on("mouseout", function(){ return tooltip.style("visibility", "hidden"); });
 
+  // histogram for 24 hours trend
+  svg1.append("g")
+    .attr("class", "axis axis1-x")
+    .attr("transform", "translate(0," + (height + 5) + ")")
+    .call(d3.axisBottom(x1).tickSizeInner(0).tickFormat(d3.timeFormat("%H")));
+
+  svg1.append("g")
+    .attr("class", "axis axis1-y")
+    .call(d3.axisLeft(y1).tickSizeInner(-width1).tickSizeOuter(0).tickValues([0,20,40,60,80]));
+
+  var bar1 = svg1.selectAll(".bar")
+      .data(bins1)
+    .enter().append("g")
+      .attr("class", "bar-24hr")
+      .attr("transform", function(d) { return "translate(" + x1(d.x0) + "," + y1(d.length) + ")"; });
+
+  bar1.append("rect")
+      .attr("x", 1)
+      .attr("width", function(d) { return x1(d.x1) - x1(d.x0) - 1; })
+      .attr("height", function(d) { return height1 - y1(d.length); })
+      .on("mouseover", displayTip24Hours)
+      .on("mousemove", function(d){ return tooltip1.style("top", (y1(d.length)+10) + "px").style("left",(event.pageX-width1-2*margin.right-2*margin.left)+"px"); })
+      .on("mouseout", function(){ return tooltip1.style("visibility", "hidden"); });
+
+  // table init for bootgrid
   initTable();
 
+  // stats calculation and summary
   stats.lifetime.totalClicks = data.length;
   stats.lifetime.totalDays = Math.round(Math.abs((latestDate - earliestDate)/(oneDay)));
   stats.lifetime.avgPerDay = (stats.lifetime.totalClicks / stats.lifetime.totalDays).toFixed(3);
@@ -95,9 +158,9 @@ d3.csv('data/panic.csv', processData, function(error, data) {
 
   populateSummary(stats);
 
+  // top locations gathering
   var sortedDistricts = sortDistricts(countDistricts);
   populateLocation(sortedDistricts);
-  console.log(sortedDistricts);
 });
 
 function processData(d) {
@@ -105,6 +168,10 @@ function processData(d) {
   d.end_time = parseDate(d.end_time);
   d.year = d.start_time.getFullYear();
   d.month = d.start_time.getMonth();
+
+  // standardized time in one day
+  d.time = new Date();
+  d.time.setTime(todayMillis + d.start_time.getHours() * 60 * 60 * 1000 + d.start_time.getMinutes() * 60 * 1000);
 
   // preprocess for stats calculation
   earliestDate = d.start_time.getTime() < earliestDate ? d.start_time.getTime() : earliestDate;
@@ -167,6 +234,14 @@ function displayTip(d) {
     });
   d3.select("#panic-tooltip > span.value").html("pressed <b>" + d.length + "</b> times");
   return tooltip.style("visibility", "visible");
+}
+
+function displayTip24Hours(d) {
+  d3.select("#panic-tooltip-24hr > span.time").text(function() {
+    return d.x0.getHours() + ":00 - " + d.x0.getHours() + ":59";
+  });
+  d3.select("#panic-tooltip-24hr > span.value").html("pressed <b>" + d.length + "</b> times");
+  return tooltip1.style("visibility", "visible");
 }
 
 function resize() {
