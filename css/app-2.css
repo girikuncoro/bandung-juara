@@ -3278,11 +3278,17 @@ html.ie9 .mCS-minimal-dark.mCSB_scrollTools_onDrag .mCSB_dragger .mCSB_dragger_b
     Visualization Style
     Used for panic data.
 ---------------------------------------------------*/
-.bar rect {
+.bar-year rect {
   fill: #FFC107;
 }
-.bar rect:hover {
+.bar-year rect:hover {
   fill: #FFE082;
+}
+.bar-24hr rect {
+  fill: #009688;
+}
+.bar-24hr rect:hover {
+  fill: #80CBC4;
 }
 #panic-tooltip {
   line-height: 1;
@@ -3302,6 +3308,26 @@ html.ie9 .mCS-minimal-dark.mCSB_scrollTools_onDrag .mCSB_dragger .mCSB_dragger_b
   margin-bottom: 4px;
 }
 #panic-tooltip span.value {
+  display: block;
+}
+#panic-tooltip-24hr {
+  line-height: 1;
+  padding: 9px;
+  background: rgba(255, 255, 255, 1.0);
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 1px;
+  border-color: #fff;
+  -webkit-box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.175);
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.175);
+  font: 13px inherit;
+  color: #212121;
+}
+#panic-tooltip-24hr span.time {
+  display: block;
+  margin-bottom: 4px;
+}
+#panic-tooltip-24hr span.value {
   display: block;
 }
 .axis path {

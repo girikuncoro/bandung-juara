@@ -43,6 +43,13 @@ var tooltip = d3.select("#panic-histo").append("div")
     .style("visibility", "hidden")
     .html("<span class='time'></span><span class='value'></span>");
 
+var tooltip1 = d3.select("#panic-24hr").append("div")
+    .attr("id", "panic-tooltip-24hr")
+    .style("position", "absolute")
+    .style("z-index", "9999")
+    .style("visibility", "hidden")
+    .html("<span class='time'></span><span class='value'></span>");
+
 var svg = d3.select("#panic-histo").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
@@ -91,7 +98,7 @@ d3.csv('data/panic.csv', processData, function(error, data) {
   var bar = svg.selectAll(".bar")
       .data(bins)
     .enter().append("g")
-      .attr("class", "bar")
+      .attr("class", "bar-year")
       .attr("transform", function(d) { return "translate(" + x(d.x0) + "," + y(d.length) + ")"; });
 
   bar.append("rect")
@@ -99,7 +106,7 @@ d3.csv('data/panic.csv', processData, function(error, data) {
       .attr("width", function(d) { return x(d.x1) - x(d.x0) - 1; })
       .attr("height", function(d) { return height - y(d.length); })
       .on("mouseover", displayTip)
-      .on("mousemove", function(d){ return tooltip.style("top", (y(d.length)+10) + "px").style("left",(event.pageX-width/3)+"px"); })
+      .on("mousemove", function(d){ return tooltip.style("top", (y(d.length)+10) + "px").style("left",(event.pageX-margin.left-margin.right-width/3)+"px"); })
       .on("mouseout", function(){ return tooltip.style("visibility", "hidden"); });
 
   // histogram for 24 hours trend
@@ -115,16 +122,16 @@ d3.csv('data/panic.csv', processData, function(error, data) {
   var bar1 = svg1.selectAll(".bar")
       .data(bins1)
     .enter().append("g")
-      .attr("class", "bar")
+      .attr("class", "bar-24hr")
       .attr("transform", function(d) { return "translate(" + x1(d.x0) + "," + y1(d.length) + ")"; });
 
   bar1.append("rect")
       .attr("x", 1)
       .attr("width", function(d) { return x1(d.x1) - x1(d.x0) - 1; })
       .attr("height", function(d) { return height1 - y1(d.length); })
-      // .on("mouseover", displayTip)
-      // .on("mousemove", function(d){ return tooltip.style("top", (y(d.length)+10) + "px").style("left",(event.pageX-width/3)+"px"); })
-      // .on("mouseout", function(){ return tooltip.style("visibility", "hidden"); });
+      .on("mouseover", displayTip24Hours)
+      .on("mousemove", function(d){ return tooltip1.style("top", (y1(d.length)+10) + "px").style("left",(event.pageX-width1-2*margin.right-2*margin.left)+"px"); })
+      .on("mouseout", function(){ return tooltip1.style("visibility", "hidden"); });
 
   // table init for bootgrid
   initTable();
@@ -227,6 +234,14 @@ function displayTip(d) {
     });
   d3.select("#panic-tooltip > span.value").html("pressed <b>" + d.length + "</b> times");
   return tooltip.style("visibility", "visible");
+}
+
+function displayTip24Hours(d) {
+  d3.select("#panic-tooltip-24hr > span.time").text(function() {
+    return d.x0.getHours() + ":00 - " + d.x0.getHours() + ":59";
+  });
+  d3.select("#panic-tooltip-24hr > span.value").html("pressed <b>" + d.length + "</b> times");
+  return tooltip1.style("visibility", "visible");
 }
 
 function resize() {
