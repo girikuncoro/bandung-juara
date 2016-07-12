@@ -34,7 +34,7 @@ var y1 = d3.scaleLinear()
 var x2 = d3.scaleBand()
     .domain(days)
     .rangeRound([0, width2])
-    .padding(.1);
+    .padding(.05);
 
 var y2 = d3.scaleLinear()
     .range([height2, 0]);
@@ -58,6 +58,13 @@ var tooltip = d3.select("#panic-histo").append("div")
 
 var tooltip1 = d3.select("#panic-24hr").append("div")
     .attr("id", "panic-tooltip-24hr")
+    .style("position", "absolute")
+    .style("z-index", "9999")
+    .style("visibility", "hidden")
+    .html("<span class='time'></span><span class='value'></span>");
+
+var tooltip2 = d3.select("#panic-weekly").append("div")
+    .attr("id", "panic-tooltip-weekly")
     .style("position", "absolute")
     .style("z-index", "9999")
     .style("visibility", "hidden")
@@ -92,8 +99,6 @@ var oneDay = 24*60*60*1000,
 
     today.setHours(0, 0, 0, 0);
 var todayMillis = today.getTime();
-
-d3.select(window).on('resize', resize);
 
 d3.csv('data/panic.csv', processData, function(error, data) {
   if (error) throw error;
@@ -190,7 +195,10 @@ d3.csv('data/panic.csv', processData, function(error, data) {
       .attr("x", function(d,i) { return x2(days[i]); })
       .attr("y", function(d,i) { return y2(d); })
       .attr("height", function(d) { return height2 - y2(d) })
-      .attr("width", x2.bandwidth());
+      .attr("width", x2.bandwidth())
+      .on("mouseover", displayTipWeekly)
+      .on("mousemove", function(d){ return tooltip2.style("top", (y2(d)+10) + "px").style("left",(event.pageX-width2-2*margin.right-2*margin.left)+"px"); })
+      .on("mouseout", function(){ return tooltip2.style("visibility", "hidden"); });;
 
   // table init for bootgrid
   initTable();
@@ -202,6 +210,8 @@ d3.csv('data/panic.csv', processData, function(error, data) {
   var sortedDistricts = sortDistricts(countDistricts);
   populateLocation(sortedDistricts);
 });
+
+d3.select(window).on('resize', resize);
 
 function processData(d) {
   d.start_time = parseDate(d.start_time);
@@ -278,7 +288,7 @@ function displayTip(d) {
         return d.x0.getDate() + " " + months[d.x0.getMonth()] + " - " + d.x1.getDate() + " " + months[d.x1.getMonth()] + " " + d.x0.getFullYear();
       }
     });
-  d3.select("#panic-tooltip > span.value").html("pressed <b>" + d.length + "</b> times");
+  d3.select("#panic-tooltip > span.value").html("<b>" + d.length + "</b> times pressed");
   return tooltip.style("visibility", "visible");
 }
 
@@ -286,8 +296,16 @@ function displayTip24Hours(d) {
   d3.select("#panic-tooltip-24hr > span.time").text(function() {
     return d.x0.getHours() + ":00 - " + d.x0.getHours() + ":59";
   });
-  d3.select("#panic-tooltip-24hr > span.value").html("pressed <b>" + d.length + "</b> times");
+  d3.select("#panic-tooltip-24hr > span.value").html("<b>" + d.length + "</b> times pressed");
   return tooltip1.style("visibility", "visible");
+}
+
+function displayTipWeekly(d, i) {
+  d3.select("#panic-tooltip-weekly > span.time").text(function() {
+    return days[i];
+  });
+  d3.select("#panic-tooltip-weekly > span.value").html("<b>" + d + "</b> times pressed");
+  return tooltip2.style("visibility", "visible");
 }
 
 function resize() {

@@ -3336,6 +3336,26 @@ rect.bar-weekly:hover {
 #panic-tooltip-24hr span.value {
   display: block;
 }
+#panic-tooltip-weekly {
+  line-height: 1;
+  padding: 9px;
+  background: rgba(255, 255, 255, 1.0);
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 1px;
+  border-color: #fff;
+  -webkit-box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.175);
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.175);
+  font: 13px inherit;
+  color: #212121;
+}
+#panic-tooltip-weekly span.time {
+  display: block;
+  margin-bottom: 4px;
+}
+#panic-tooltip-weekly span.value {
+  display: block;
+}
 .axis path {
   display: none;
 }
