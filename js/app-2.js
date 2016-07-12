@@ -1,6 +1,7 @@
 var parseDate = d3.timeParse("%m/%d/%y %H:%M"),
     formatCount = d3.format(",.0f"),
-    months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+    days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
 var margin = {top: 10, right: 30, bottom: 30, left: 40};
 
@@ -12,19 +13,31 @@ var width1 = parseInt(d3.select("#panic-24hr").style("width"), 10),
     width1 = width1 - margin.left - margin.right,
     height1 = 200 - margin.top - margin.bottom;
 
+var width2 = parseInt(d3.select("#panic-weekly").style("width"), 10),
+    width2 = width2 - margin.left - margin.right,
+    height2 = 200 - margin.top - margin.bottom;
+
 var x = d3.scaleTime()
     .domain([new Date(2015, 0, 1), new Date(2015, 11, 31)])
     .rangeRound([0, width]);
 
 var y = d3.scaleLinear()
-    .range([height, 0]);
+    .rangeRound([height, 0]);
 
 var x1 = d3.scaleTime()
     .domain([(new Date()).setHours(0, 0, 0, 0), (new Date()).setHours(23, 59, 59, 0)])
     .rangeRound([0, width1]);
 
 var y1 = d3.scaleLinear()
-    .range([height, 0]);
+    .range([height1, 0]);
+
+var x2 = d3.scaleBand()
+    .domain(days)
+    .rangeRound([0, width2])
+    .padding(.05);
+
+var y2 = d3.scaleLinear()
+    .range([height2, 0]);
 
 var histogram = d3.histogram()
     .value(function(d) { return d.start_time; })
@@ -50,6 +63,13 @@ var tooltip1 = d3.select("#panic-24hr").append("div")
     .style("visibility", "hidden")
     .html("<span class='time'></span><span class='value'></span>");
 
+var tooltip2 = d3.select("#panic-weekly").append("div")
+    .attr("id", "panic-tooltip-weekly")
+    .style("position", "absolute")
+    .style("z-index", "9999")
+    .style("visibility", "hidden")
+    .html("<span class='time'></span><span class='value'></span>");
+
 var svg = d3.select("#panic-histo").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
@@ -59,6 +79,12 @@ var svg = d3.select("#panic-histo").append("svg")
 var svg1 = d3.select("#panic-24hr").append("svg")
     .attr("width", width1 + margin.left + margin.right)
     .attr("height", height1 + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+var svg2 = d3.select("#panic-weekly").append("svg")
+    .attr("width", width2 + margin.left + margin.right)
+    .attr("height", height2 + margin.top + margin.bottom)
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
@@ -74,17 +100,35 @@ var oneDay = 24*60*60*1000,
     today.setHours(0, 0, 0, 0);
 var todayMillis = today.getTime();
 
-d3.select(window).on('resize', resize);
-
 d3.csv('data/panic.csv', processData, function(error, data) {
   if (error) throw error;
-  console.log(data);
+
+  // stats calculation and summary
+  stats.lifetime.totalClicks = data.length;
+  stats.lifetime.totalDays = Math.round(Math.abs((latestDate - earliestDate)/(oneDay)));
+  stats.lifetime.avgPerDay = (stats.lifetime.totalClicks / stats.lifetime.totalDays).toFixed(3);
+  stats.lifetime.uniqueUsers = Object.keys(users.lifetime).length;
+  stats.lifetime.avgTimeCompletion = Math.round(stats.lifetime.totalDuration / stats.lifetime.totalClicks / 60 / 1000); // in minutes
+
+  stats.lifetime.earliestYear = (new Date(earliestDate)).getFullYear();
+  stats.lifetime.latestYear = (new Date(latestDate)).getFullYear();
+
+  for(var year in stats) {
+    if(isNaN(year)) continue;
+
+    stats[year].totalClicks.forEach(function(d,i) {
+      stats[year].avgPerDay[i] = (d / daysInMonth(i+1, year)).toFixed(2);
+      stats[year].uniqueUsers[i] = Object.keys(users[year][i]).length;
+      stats[year].avgTimeCompletion[i] = Math.round(stats[year].totalDuration[i] / d / 60 / 1000) || 0;  // in minutes
+    });
+  }
 
   var bins = histogram(data),
       bins1 = histogram1(data);  // 24 hours bins
 
   y.domain([0, 1.2 * d3.max(bins, function(d) { return d.length; })]);
   y1.domain([0, 1.2 * d3.max(bins1, function(d) { return d.length; })]);
+  y2.domain([0, 1.2 * d3.max(stats[stats.lifetime.latestYear].weeklyClicks, function(d) { return d; })]);
 
   svg.append("g")
     .attr("class", "axis axis-x")
@@ -112,7 +156,7 @@ d3.csv('data/panic.csv', processData, function(error, data) {
   // histogram for 24 hours trend
   svg1.append("g")
     .attr("class", "axis axis1-x")
-    .attr("transform", "translate(0," + (height + 5) + ")")
+    .attr("transform", "translate(0," + (height1 + 5) + ")")
     .call(d3.axisBottom(x1).tickSizeInner(0).tickFormat(d3.timeFormat("%H")));
 
   svg1.append("g")
@@ -130,32 +174,35 @@ d3.csv('data/panic.csv', processData, function(error, data) {
       .attr("width", function(d) { return x1(d.x1) - x1(d.x0) - 1; })
       .attr("height", function(d) { return height1 - y1(d.length); })
       .on("mouseover", displayTip24Hours)
-      .on("mousemove", function(d){ return tooltip1.style("top", (y1(d.length)+10) + "px").style("left",(event.pageX-width1-2*margin.right-2*margin.left)+"px"); })
+      .on("mousemove", function(d){ return tooltip1.style("top", (y1(d.length)+10) + "px").style("left",(event.pageX-width1-margin.right-margin.left)+"px"); })
       .on("mouseout", function(){ return tooltip1.style("visibility", "hidden"); });
+
+  // bar chart for one week trend
+  svg2.append("g")
+    .attr("class", "axis axis2-x")
+    .attr("transform", "translate(0," + (height2 + 5) + ")")
+    .call(d3.axisBottom(x2).tickSizeInner(0));
+
+  svg2.append("g")
+    .attr("class", "axis axis2-y")
+    .call(d3.axisLeft(y2).tickSizeInner(-width2).tickSizeOuter(0).tickValues([0,40,80,120,160]));
+
+  svg2.selectAll(".bar")
+      .data(stats[stats.lifetime.latestYear].weeklyClicks)
+    .enter().append("rect")
+      .attr("class", "bar-weekly")
+      .attr("x", function(d,i) { return x2(days[i]); })
+      .attr("y", function(d,i) { return y2(d); })
+      .attr("height", function(d) { return height2 - y2(d) })
+      .attr("width", x2.bandwidth())
+      .on("mouseover", displayTipWeekly)
+      .on("mousemove", function(d){ return tooltip2.style("top", (y2(d)+10) + "px").style("left",(event.pageX-width2-margin.right-margin.left)+"px"); })
+      .on("mouseout", function(){ return tooltip2.style("visibility", "hidden"); });
 
   // table init for bootgrid
   initTable();
 
-  // stats calculation and summary
-  stats.lifetime.totalClicks = data.length;
-  stats.lifetime.totalDays = Math.round(Math.abs((latestDate - earliestDate)/(oneDay)));
-  stats.lifetime.avgPerDay = (stats.lifetime.totalClicks / stats.lifetime.totalDays).toFixed(3);
-  stats.lifetime.uniqueUsers = Object.keys(users.lifetime).length;
-  stats.lifetime.avgTimeCompletion = Math.round(stats.lifetime.totalDuration / stats.lifetime.totalClicks / 60 / 1000); // in minutes
-
-  stats.lifetime.earliestYear = (new Date(earliestDate)).getFullYear();
-  stats.lifetime.latestYear = (new Date(latestDate)).getFullYear();
-
-  for(var year in stats) {
-    if(isNaN(year)) continue;
-
-    stats[year].totalClicks.forEach(function(d,i) {
-      stats[year].avgPerDay[i] = (d / daysInMonth(i+1, year)).toFixed(2);
-      stats[year].uniqueUsers[i] = Object.keys(users[year][i]).length;
-      stats[year].avgTimeCompletion[i] = Math.round(stats[year].totalDuration[i] / d / 60 / 1000) || 0;  // in minutes
-    });
-  }
-
+  // summary init for sparkline cards
   populateSummary(stats);
 
   // top locations gathering
@@ -163,11 +210,14 @@ d3.csv('data/panic.csv', processData, function(error, data) {
   populateLocation(sortedDistricts);
 });
 
+d3.select(window).on('resize', resize);
+
 function processData(d) {
   d.start_time = parseDate(d.start_time);
   d.end_time = parseDate(d.end_time);
   d.year = d.start_time.getFullYear();
   d.month = d.start_time.getMonth();
+  d.day = d.start_time.getDay();  // 0 for Sunday, 1 for Monday
 
   // standardized time in one day
   d.time = new Date();
@@ -185,6 +235,7 @@ function processData(d) {
     stats[d.year].uniqueUsers = [];
     stats[d.year].totalDuration = [];
     stats[d.year].avgTimeCompletion= [];
+    stats[d.year].weeklyClicks = [];
 
     for(var i = 0; i < 12; i++) {
       stats[d.year].totalClicks.push(0);
@@ -193,10 +244,14 @@ function processData(d) {
       stats[d.year].totalDuration.push(0);
       stats[d.year].avgTimeCompletion.push(0);
     }
+    for(var i = 0; i < 7; i++) {
+      stats[d.year].weeklyClicks.push(0);
+    }
   }
   stats[d.year].totalClicks[d.month]++;
   stats.lifetime.totalDuration += d.end_time - d.start_time;
   stats[d.year].totalDuration[d.month] += d.end_time - d.start_time;
+  stats[d.year].weeklyClicks[d.day]++;
 
   // aggregate unique users
   if(!users.hasOwnProperty(d.year)) {
@@ -232,7 +287,7 @@ function displayTip(d) {
         return d.x0.getDate() + " " + months[d.x0.getMonth()] + " - " + d.x1.getDate() + " " + months[d.x1.getMonth()] + " " + d.x0.getFullYear();
       }
     });
-  d3.select("#panic-tooltip > span.value").html("pressed <b>" + d.length + "</b> times");
+  d3.select("#panic-tooltip > span.value").html("<b>" + d.length + "</b> times pressed");
   return tooltip.style("visibility", "visible");
 }
 
@@ -240,11 +295,25 @@ function displayTip24Hours(d) {
   d3.select("#panic-tooltip-24hr > span.time").text(function() {
     return d.x0.getHours() + ":00 - " + d.x0.getHours() + ":59";
   });
-  d3.select("#panic-tooltip-24hr > span.value").html("pressed <b>" + d.length + "</b> times");
+  d3.select("#panic-tooltip-24hr > span.value").html("<b>" + d.length + "</b> times pressed");
   return tooltip1.style("visibility", "visible");
 }
 
+function displayTipWeekly(d, i) {
+  d3.select("#panic-tooltip-weekly > span.time").text(function() {
+    return days[i];
+  });
+  d3.select("#panic-tooltip-weekly > span.value").html("<b>" + d + "</b> times pressed");
+  return tooltip2.style("visibility", "visible");
+}
+
 function resize() {
+  resizeYearlyChart();
+  resize24hrChart();
+  resizeWeeklyChart();
+}
+
+function resizeYearlyChart() {
   // update width
   width = parseInt(d3.select('#panic-histo').style('width'), 10);
   width = width - margin.left - margin.right;
@@ -254,15 +323,56 @@ function resize() {
   d3.select("#panic-histo svg")
       .attr('width', (width + margin.left + margin.right) + 'px');
 
-  svg.selectAll('.bar')
+  svg.selectAll('.bar-year')
       .attr("transform", function(d) { return "translate(" + x(d.x0) + "," + y(d.length) + ")"; });
   svg.selectAll('rect')
       .attr("width", function(d) { return x(d.x1) - x(d.x0) - 1; })
-      .on("mousemove", function(d){ return tooltip.style("top", (y(d.length)+10) + "px").style("left",(event.pageX-width/3)+"px"); });
+      .on("mousemove", function(d) { return tooltip.style("top", (y(d.length)+10) + "px").style("left",(event.pageX-width/3)+"px"); });
 
   // update axes
   svg.select('.axis.axis-x').call(d3.axisBottom(x).tickSizeInner(0).tickFormat(d3.timeFormat("%b")));
   svg.select('.axis.axis-y').call(d3.axisLeft(y).tickSizeInner(-width).tickSizeOuter(0).tickValues([0,50,100,150]));
+}
+
+function resize24hrChart() {
+  // update width
+  width1 = parseInt(d3.select('#panic-24hr').style('width'), 10);
+  width1 = width1 - margin.left - margin.right;
+
+  // resize the chart
+  x1.rangeRound([0, width1]);
+  d3.select("#panic-24hr svg")
+      .attr('width', (width1 + margin.left + margin.right) + 'px');
+
+  svg1.selectAll('.bar-24hr')
+      .attr("transform", function(d) { return "translate(" + x1(d.x0) + "," + y1(d.length) + ")"; });
+  svg1.selectAll('rect')
+      .attr("width", function(d) { return x1(d.x1) - x1(d.x0) - 1; })
+      .on("mousemove", function(d){ return tooltip1.style("top", (y1(d.length)+10) + "px").style("left",(event.pageX-width1-2*margin.right-2*margin.left)+"px"); })
+
+  // update axes
+  svg1.select('.axis.axis1-x').call(d3.axisBottom(x1).tickSizeInner(0).tickFormat(d3.timeFormat("%H")));
+  svg1.select('.axis.axis1-y').call(d3.axisLeft(y1).tickSizeInner(-width1).tickSizeOuter(0).tickValues([0,20,40,60,80]));
+}
+
+function resizeWeeklyChart() {
+  // update width
+  width2 = parseInt(d3.select('#panic-weekly').style('width'), 10);
+  width2 = width2 - margin.left - margin.right;
+
+  // resize the chart
+  x2.rangeRound([0, width2])
+  d3.select("#panic-weekly svg")
+      .attr('width', (width2 + margin.left + margin.right) + 'px');
+
+  svg2.selectAll('rect')
+      .attr("x", function(d,i) { return x2(days[i]); })
+      .attr("width", x2.bandwidth())
+      .on("mousemove", function(d){ return tooltip2.style("top", (y2(d)+10) + "px").style("left",(event.pageX-width2-2*margin.right-2*margin.left)+"px"); });
+
+  // update axes
+  svg2.select('.axis.axis2-x').call(d3.axisBottom(x2).tickSizeInner(0));
+  svg2.select('.axis.axis2-y').call(d3.axisLeft(y2).tickSizeInner(-width2).tickSizeOuter(0));
 }
 
 function initTable() {
@@ -314,8 +424,8 @@ function sortDistricts(districts) {
   return res;
 }
 
-function populateLocation(sortedDistricts, total=5) {
-  // default top 5 locations
+function populateLocation(sortedDistricts, total=6) {
+  // default top 6 locations
   var maxShow = 10;
 
   for(var i = 0; i < total; i++) {
