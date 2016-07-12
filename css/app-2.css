@@ -3315,3 +3315,7 @@ html.ie9 .mCS-minimal-dark.mCSB_scrollTools_onDrag .mCSB_dragger .mCSB_dragger_b
   opacity: 0.1;
   stroke-dasharray: 2,2;
 }
+.axis1-y .tick line {
+  opacity: 0.1;
+  stroke-dasharray: 2,2;
+}
