@@ -426,10 +426,11 @@ function sortDistricts(districts) {
 
 function populateLocation(sortedDistricts, total=6) {
   // default top 6 locations
-  var maxShow = 10;
+  var maxShow = 10,
+      maxCount = d3.max(sortedDistricts, function(d) { return d.count; });
 
   for(var i = 0; i < total; i++) {
-    appendDistrict(sortedDistricts[i], i);
+    appendDistrict(sortedDistricts[i], i, maxCount);
   }
 
   $('.show-more').on('click', function() {
@@ -442,12 +443,12 @@ function populateLocation(sortedDistricts, total=6) {
     }
 
     for(var i = total; i < maxShow; i++) {
-      appendDistrict(sortedDistricts[i], i);
+      appendDistrict(sortedDistricts[i], i, maxCount);
     }
     $('.view-more.locations').addClass('show-less').html('View Less');
   });
 
-  function appendDistrict(data, idx) {
+  function appendDistrict(data, idx, maxCount) {
     $("#top-locations").append('\
         <div class="list-group-item media">\
           <div class="pull-left">\
@@ -457,7 +458,7 @@ function populateLocation(sortedDistricts, total=6) {
             <div class="pull-right">' + data.count + ' clicks</div>\
               <div class="media-body">\
                 <div class="progress">\
-                  <div class="progress-bar" role="progressbar" aria-valuenow="' + sortedDistricts[i].count + '" aria-valuemin="0" aria-valuemax="100" style="width: ' + sortedDistricts[i].count + '%">\
+                  <div class="progress-bar" role="progressbar" aria-valuenow="' + sortedDistricts[i].count + '" aria-valuemin="0" aria-valuemax="' + maxCount + '" style="width: ' + sortedDistricts[i].count + '%">\
                   </div>\
                 </div>\
               </div>\

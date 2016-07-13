@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bandung Command Center</title>
+
+  <!-- Vendor CSS -->
+  <link href="vendors/bower_components/animate.css/animate.min.css" rel="stylesheet">
+  <link href="vendors/bower_components/material-design-iconic-font/dist/css/material-design-iconic-font.min.css" rel="stylesheet">
+  <link href="vendors/bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.min.css" rel="stylesheet">
+  <link href="vendors/bootgrid/jquery.bootgrid.min.css" rel="stylesheet">
+
+  <!-- CSS -->
+  <link href="css/app-1.css" rel="stylesheet">
+  <link href="css/app-2.css" rel="stylesheet">
+
+</head>
+<body>
+  <header id="header" class="clearfix" data-ma-theme="indigo">
+      <ul class="h-inner">
+          <li class="hi-trigger ma-trigger" data-ma-action="sidebar-open" data-ma-target="#sidebar">
+              <div class="line-wrap">
+                  <div class="line top"></div>
+                  <div class="line center"></div>
+                  <div class="line bottom"></div>
+              </div>
+          </li>
+
+          <li class="hi-logo hidden-xs">
+              <a href="index.html">Bandung Command Center</a>
+          </li>
+      </ul>
+
+  </header>
+
+  <section id="main">
+      <aside id="sidebar" class="sidebar c-overflow">
+          <div class="s-profile">
+              <a href="" data-ma-action="profile-menu-toggle">
+                  <div class="sp-pic">
+                      <img src="img/profile-pics/1.jpg" alt="">
+                  </div>
+
+                  <div class="sp-info">
+                      Ridwan Kamil
+
+                      <i class="zmdi zmdi-caret-down"></i>
+                  </div>
+              </a>
+
+              <ul class="main-menu">
+                  <li>
+                      <a href="index.html"><i class="zmdi zmdi-time-restore"></i> Logout</a>
+                  </li>
+              </ul>
+          </div>
+
+          <ul class="main-menu">
+              <li>
+                  <a href="index.html"><i class="zmdi zmdi-home"></i> Home</a>
+              </li>
+              <li class="sub-menu active toggled">
+                  <a href="" data-ma-action="submenu-toggle"><i class="zmdi zmdi-view-compact"></i> Analytics</a>
+
+                  <ul>
+                      <li class="active"><a href="#">Panic Button</a></li>
+                      <li><a href="#">Birth/Infant</a></li>
+                      <li><a href="#">Crimes</a></li>
+                  </ul>
+              </li>
+          </ul>
+      </aside>
+
+      <section id="content">
+          <div class="container">
+              <div class="block-header">
+                  <h2>Panic Button Analytics - <span>2015</span></h2>
+
+                  <ul class="actions">
+                      <li class="dropdown">
+                          <a href="" data-toggle="dropdown">
+                              <i class="zmdi zmdi-more-vert"></i>
+                          </a>
+
+                          <ul class="dropdown-menu dropdown-menu-right">
+                              <li>
+                                  <a href="">2016</a>
+                              </li>
+                              <li class="active">
+                                  <a href="">2015</a>
+                              </li>
+                          </ul>
+                      </li>
+                  </ul>
+
+              </div>
+
+              <div class="card">
+                <div class="card-header">
+                  <h2>Click Statistics<small>Weekly occurence throughout the city in <b>2015</b>.</small></h2>
+                </div>
+
+                <div class="card-body">
+                    <div id="panic-histo"></div>
+                </div>
+              </div>
+
+              <div class="mini-charts">
+                <div class="row">
+                    <div class="col-sm-6 col-md-3">
+                      <div class="mini-charts-item bgm-lightgreen">
+                          <div class="clearfix">
+                              <div class="chart stats-bar-clicks"></div>
+                              <div class="count">
+                                  <small>Total Clicks</small>
+                                  <h2 id="sum-clicks"></h2>
+                              </div>
+                          </div>
+                      </div>
+                    </div>
+
+                    <div class="col-sm-6 col-md-3">
+                      <div class="mini-charts-item bgm-purple">
+                          <div class="clearfix">
+                              <div class="chart stats-bar-avg-clicks"></div>
+                              <div class="count">
+                                  <small>Avg Clicks/Day</small>
+                                  <h2 id="sum-avg-clicks"></h2>
+                              </div>
+                          </div>
+                      </div>
+                    </div>
+
+                    <div class="col-sm-6 col-md-3">
+                      <div class="mini-charts-item bgm-orange">
+                          <div class="clearfix">
+                              <div class="chart stats-line-unique-users"></div>
+                              <div class="count">
+                                  <small>Unique Users</small>
+                                  <h2 id="sum-unique-users"></h2>
+                              </div>
+                          </div>
+                      </div>
+                    </div>
+
+                    <div class="col-sm-6 col-md-3">
+                      <div class="mini-charts-item bgm-bluegray">
+                          <div class="clearfix">
+                              <div class="chart stats-line-avg-time"></div>
+                              <div class="count">
+                                  <small>Avg Completion</small>
+                                  <h2 id="sum-avg-time"></h2>
+                              </div>
+                          </div>
+                      </div>
+                    </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-sm-12 col-md-4">
+                  <div class="card rating-list">
+                    <div class="card-header">
+                        <h2>Top Locations<small>Top locations in Bandung where panic clicking happened in <b>2015</b>.</small></h2>
+                    </div>
+
+                    <div class="list-group" id="card-locations">
+                        <div class="lg-body">
+                            <div class="p-5" id="top-locations">
+                            </div>
+                            <a class="view-more locations show-more" href="#card-locations">View More</a>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-sm-12 col-md-8">
+                  <div class="card">
+                    <div class="card-header">
+                      <h2>24 Hours Summary<small>Hourly summary of aggregated click trends in <b>2015</b>.</small></h2>
+                    </div>
+
+                    <div class="card-body">
+                      <div id="panic-24hr"></div>
+                    </div>
+                  </div>
+
+                  <div class="card">
+                    <div class="card-header">
+                      <h2>One Week Summary<small>One week summary of aggregated click trends in <b>2015</b>.</small></h2>
+                    </div>
+
+                    <div class="card-body">
+                      <div id="panic-weekly"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+              <div class="card">
+                  <div class="card-header">
+                      <h2>Panic Button Record
+                          <small>Record table sorted from the most recent panic button occurence.</small>
+                      </h2>
+                  </div>
+
+                  <div class="table-responsive">
+                      <table id="data-table-basic" class="table table-striped">
+                          <thead>
+                          <tr>
+                              <th data-column-id="date" data-order="desc">Date</th>
+                              <th data-column-id="name">Name</th>
+                              <th data-column-id="address">Address</th>
+                          </tr>
+                          </thead>
+                          <tbody id="panic-table"></tbody>
+                      </table>
+                  </div>
+              </div>
+          </div>
+      </section>
+  </section>
+
+  <footer id="footer">
+      Copyright &copy; 2016 Bandung Command Center
+
+      <ul class="f-menu">
+          <li><a href="">Support</a></li>
+          <li><a href="">Contact</a></li>
+      </ul>
+  </footer>
+
+  <!-- Page Loader -->
+  <div class="page-loader">
+      <div class="preloader pls-blue">
+          <svg class="pl-circular" viewBox="25 25 50 50">
+              <circle class="plc-path" cx="50" cy="50" r="20" />
+          </svg>
+
+          <p>Please wait...</p>
+      </div>
+  </div>
+
+  <!-- Javascript Libraries -->
+  <script src="vendors/bower_components/jquery/dist/jquery.min.js"></script>
+  <script src="vendors/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script src="vendors/bower_components/d3/d3.min.js"></script>
+
+  <script src="vendors/sparklines/jquery.sparkline.min.js"></script>
+  <script src="vendors/bower_components/Waves/dist/waves.min.js"></script>
+  <script src="vendors/bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js"></script>
+  <script src="vendors/bootgrid/jquery.bootgrid.updated.min.js"></script>
+
+  <!-- Application script -->
+  <script src="js/app-1.js"></script>
+  <script src="js/app-2.js"></script>
+
+</body>
+</html>

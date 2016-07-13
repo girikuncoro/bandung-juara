@@ -1325,6 +1325,20 @@ html.ismobile .page-loader {
   }
 }
 
+[data-ma-theme="indigo"] {
+  background-color: #3F51B5;
+}
+
+[data-ma-theme="indigo"] .ss-icon {
+  color: #3F51B5;
+}
+
+@media (max-width: 767px) {
+  [data-ma-theme="indigo"] .ha-menu {
+    background: #3F51B5;
+  }
+}
+
 [data-ma-theme="purple"] {
   background-color: #BA68C8;
 }
