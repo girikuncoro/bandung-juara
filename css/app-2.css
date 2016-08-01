@@ -1855,7 +1855,7 @@ html.ismobile .page-loader {
 }
 
 #calendar .fc-day-header {
-  color: #333 !important;
+  /*color: #333 !important;*/
   text-align: left !important;
 }
 
@@ -1866,15 +1866,13 @@ html.ismobile .page-loader {
 .fc-day-header {
   font-size: 0;
   padding-bottom: 20px !important;
-}
-
-.fc-day-header:first-letter {
   font-size: 14px;
   color: #c2c2c2;
   text-align: left;
   border-bottom-width: 0;
   border-right-color: #eee;
   padding: 10px 12px;
+  padding-left: 12px !important;
   text-transform: uppercase;
   font-weight: 700;
 }
