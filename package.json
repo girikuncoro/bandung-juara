@@ -1,0 +1,22 @@
+{
+  "name": "bandung-juara",
+  "version": "1.0.0",
+  "description": "Codebase for Bandung Command Center project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/girikuncoro/bandung-juara.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/girikuncoro/bandung-juara/issues"
+  },
+  "homepage": "https://github.com/girikuncoro/bandung-juara#readme",
+  "dependencies": {
+    "http": "0.0.0"
+  }
+}
