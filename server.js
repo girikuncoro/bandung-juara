@@ -1,17 +1,39 @@
-var http = require("http");
+/**
+ * Module dependencies.
+ */
+const express = require('express');
 
-var options = {
-	host: 'jadwal.velotek.co.id',
-	port: 80,
-	path: '/api/v1/get-undangan',
-	method: 'GET'
-};
+/**
+ * Create express server.
+ */
+const app = express();
 
-http.get(options, (res) => {
-	console.log("Response: " + res.statusCode);
-	res.setEncoding('utf8');
-	res.on('data', (chunk) => {
-		var data = JSON.parse(chunk);
-		console.log(data);
-	});
+/**
+ * Express configuration.
+ */
+app.set('port', process.env.PORT || 3000);
+app.set("views", __dirname + '/views'); //Set up the views directory
+app.engine('.html', require('ejs').__express);
+app.set('view engine', 'html'); //Set EJS as templating language WITH html as an extension
+app.use(express.static(__dirname + '/public')); //Add connection to the public folder for css & js files
+
+/**
+ * Primary app routes.
+ */
+app.use('/', require('./routes/index'));
+app.use('/panic', require('./routes/panic'));
+app.use('/calendar', require('./routes/calendar'));
+
+/**
+ * API routes.
+ */
+app.use('/api/v1/agenda', require('./routes/agenda'));
+
+/**
+ * Start Express server.
+ */
+app.listen(app.get('port'), () => {
+  console.log('Dev server is now working on port ' + port + ' ...');
 });
+
+module.exports = app;
