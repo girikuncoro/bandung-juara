@@ -33,7 +33,7 @@ app.use('/api/v1/agenda', require('./routes/agenda'));
  * Start Express server.
  */
 app.listen(app.get('port'), () => {
-  console.log('Dev server is now working on port ' + port + ' ...');
+  console.log('Dev server is now working on port ' + app.get('port') + ' ...');
 });
 
 module.exports = app;

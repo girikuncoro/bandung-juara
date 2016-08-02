@@ -1,4 +1,5 @@
-var http = require("http");
+var http = require('http');
+const router = require('express').Router();
 
 var options = {
 	host: 'jadwal.velotek.co.id',
@@ -7,11 +8,18 @@ var options = {
 	method: 'GET'
 };
 
-http.get(options, (res) => {
-	console.log("Response: " + res.statusCode);
-	res.setEncoding('utf8');
-	res.on('data', (chunk) => {
-		var data = JSON.parse(chunk);
-		console.log(data);
+router.get('/', (req, res) => {
+	var data = "";
+	http.get(options, (r) => {
+		r.setEncoding('utf8');
+		r.on('data', (chunk) => {
+			data += chunk;
+		});
+		r.on('end', () => {
+			jsonData = JSON.parse(data);
+			res.json({ data: jsonData });
+		});
 	});
 });
+
+module.exports = router;
