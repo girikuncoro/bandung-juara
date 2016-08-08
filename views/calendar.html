@@ -28,7 +28,7 @@
           </li>
 
           <li class="hi-logo hidden-xs">
-              <a href="index.html">Bandung Command Center</a>
+              <a href="/panic">Bandung Command Center</a>
           </li>
       </ul>
 
@@ -51,23 +51,23 @@
 
               <ul class="main-menu">
                   <li>
-                      <a href="index.html"><i class="zmdi zmdi-time-restore"></i> Logout</a>
+                      <a href="/"><i class="zmdi zmdi-time-restore"></i> Logout</a>
                   </li>
               </ul>
           </div>
 
           <ul class="main-menu">
               <li>
-                  <a href="index.html"><i class="zmdi zmdi-home"></i> Home</a>
+                  <a href="/dashboard"><i class="zmdi zmdi-home"></i> Home</a>
               </li>
               <li class="active">
-                  <a href="calendar.html"><i class="zmdi zmdi-calendar"></i> Calendar</a>
+                  <a href="/calendar"><i class="zmdi zmdi-calendar"></i> Calendar</a>
               </li>
               <li class="sub-menu">
                   <a href="" data-ma-action="submenu-toggle"><i class="zmdi zmdi-view-compact"></i> Analytics</a>
 
                   <ul>
-                      <li><a href="#">Panic Button</a></li>
+                      <li><a href="/panic">Panic Button</a></li>
                       <li><a href="#">Birth/Infant</a></li>
                       <li><a href="#">Crimes</a></li>
                   </ul>
@@ -87,46 +87,40 @@
                 <div id="calendar" class="card"></div>
 
                 <!-- Add event -->
-                <div class="modal fade" id="addNew-event" data-backdrop="static" data-keyboard="false">
+                <div class="modal fade" id="show-eventDetail" data-backdrop="static" data-keyboard="false">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h4 class="modal-title">Add an Event</h4>
+                                <h4 class="modal-title">Today's Event from <span id="bdgEvent-name"></span></h4>
                             </div>
                             <div class="modal-body">
                                 <form class="addEvent" role="form">
                                     <div class="form-group">
-                                        <label for="eventName">Event Name</label>
-                                        <div class="fg-line">
-                                            <input type="text" class="input-sm form-control" id="eventName"
-                                                   placeholder="eg: Sports day">
+                                        <label for="bdgEvent-from">Name</label>
+                                        <div class="fg-line p-b-10">
+                                            <span id="bdgEvent-from"></span>
+                                        </div>
+                                        <label for="bdgEvent-start">Start</label>
+                                        <div class="fg-line p-b-10">
+                                            <span id="bdgEvent-start"></span>
+                                        </div>
+                                        <label for="bdgEvent-end">End</label>
+                                        <div class="fg-line p-b-10">
+                                            <span id="bdgEvent-end"></span>
+                                        </div>
+                                        <label for="bdgEvent-location">Location</label>
+                                        <div class="fg-line p-b-10">
+                                            <span id="bdgEvent-location"></span>
+                                        </div>
+                                        <label for="bdgEvent-address">Address</label>
+                                        <div class="fg-line p-b-10">
+                                            <span id="bdgEvent-address"></span>
                                         </div>
                                     </div>
-
-                                    <div class="form-group">
-                                        <label for="eventName">Tag Color</label>
-                                        <div class="event-tag">
-                                            <span data-tag="bgm-teal" class="bgm-teal selected"></span>
-                                            <span data-tag="bgm-red" class="bgm-red"></span>
-                                            <span data-tag="bgm-pink" class="bgm-pink"></span>
-                                            <span data-tag="bgm-blue" class="bgm-blue"></span>
-                                            <span data-tag="bgm-lime" class="bgm-lime"></span>
-                                            <span data-tag="bgm-green" class="bgm-green"></span>
-                                            <span data-tag="bgm-cyan" class="bgm-cyan"></span>
-                                            <span data-tag="bgm-orange" class="bgm-orange"></span>
-                                            <span data-tag="bgm-purple" class="bgm-purple"></span>
-                                            <span data-tag="bgm-gray" class="bgm-gray"></span>
-                                            <span data-tag="bgm-black" class="bgm-black"></span>
-                                        </div>
-                                    </div>
-
-                                    <input type="hidden" id="getStart"/>
-                                    <input type="hidden" id="getEnd"/>
                                 </form>
                             </div>
 
                             <div class="modal-footer">
-                                <button type="submit" class="btn btn-link" id="addEvent">Add Event</button>
                                 <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
                             </div>
                         </div>
@@ -164,116 +158,71 @@
     <script src="vendors/bower_components/Waves/dist/waves.min.js"></script>
     <script src="vendors/bower_components/moment/min/moment.min.js"></script>
     <script src="vendors/bower_components/fullcalendar/dist/fullcalendar.min.js"></script>
-    <script src="vendors/ajax-cross-origin/js/jquery.ajax-cross-origin.min.js"></script>
 
     <script src="js/app-1.js"></script>
 
     <script type="text/javascript">
         const baseUrl = "//jadwal.velotek.co.id/api/v1/get-undangan";  // today's schedule
+        const colors = ['bgm-cyan', 'bgm-orange', 'bgm-green','bgm-purple',];
+        var agendaData;
 
         $(document).ready(function() {
-            var date = new Date();
-            var d = date.getDate();
-            var m = date.getMonth();
-            var y = date.getFullYear();
+            $.ajax({
+                url: "/api/v1/agenda",
+                type: "GET",
+                success: function(res) {
+                    console.log(res);
 
-            var cId = $('#calendar'); //Change the name if you want. I'm also using thsi add button for more actions
+                    var agendaList = [];
+                    agendaData = res.data.result;
 
-            //Generate the Calendar
-            cId.fullCalendar({
-                header: {
-                    right: '',
-                    center: 'title',
-                    left: ''
-                },
+                    agendaData.forEach(function(d,i) {
+                        var timeStart = d.surat_waktu_acara.split(" "),
+                            timeStart = timeStart[0]+'T'+timeStart[1];
+                        var timeEnd = d.surat_waktuend.split(" "),
+                            timeEnd = timeEnd[0]+'T'+timeEnd[1];
 
-                theme: true, //Do not remove this as it ruin the design
-                selectable: false,
-                selectHelper: true,
-                editable: false,
-                defaultView: 'agendaDay',
+                        agendaList.push({
+                            id: i,
+                            title: d.surat_pengundang,
+                            start: timeStart,
+                            end: timeEnd,
+                            className: colors[i % colors.length],
+                            allDay: false
+                        });
+                    });
 
-                //Add Events
-                events: [
-                    {
-                        title: 'Hangout with friends',
-                        start: new Date(y, m, 1),
-                        allDay: true,
-                        className: 'bgm-cyan'
-                    },
-                    {
-                        title: 'Meeting with client',
-                        start: new Date(y, m, 10),
-                        allDay: true,
-                        className: 'bgm-orange'
-                    },
-                    {
-                        title: 'Repeat Event',
-                        start: new Date(y, m, 18),
-                        allDay: true,
-                        className: 'bgm-amber'
-                    },
-                    {
-                        title: 'Semester Exam',
-                        start: new Date(y, m, 20),
-                        allDay: true,
-                        className: 'bgm-green'
-                    },
-                    {
-                        title: 'Soccor match',
-                        start: new Date(y, m, 5),
-                        allDay: true,
-                        className: 'bgm-lightblue'
-                    },
-                    {
-                        title: 'Coffee time',
-                        start: new Date(y, m, 21),
-                        allDay: true,
-                        className: 'bgm-orange'
-                    },
-                    {
-                        title: 'Job Interview',
-                        start: new Date(y, m, 5),
-                        allDay: true,
-                        className: 'bgm-amber'
-                    },
-                    {
-                        title: 'IT Meeting',
-                        start: new Date(y, m, 5),
-                        allDay: true,
-                        className: 'bgm-green'
-                    },
-                    {
-                        title: 'Brunch at Beach',
-                        start: new Date(y, m, 1),
-                        allDay: true,
-                        className: 'bgm-lightblue'
-                    },
-                    {
-                        title: 'Live TV Show',
-                        start: new Date(y, m, 15),
-                        allDay: true,
-                        className: 'bgm-cyan'
-                    },
-                    {
-                        title: 'Software Conference',
-                        start: new Date(y, m, 25),
-                        allDay: true,
-                        className: 'bgm-lightblue'
-                    },
-                    {
-                        title: 'Coffee time',
-                        start: new Date(y, m, 30),
-                        allDay: true,
-                        className: 'bgm-orange'
-                    },
-                    {
-                        title: 'Job Interview',
-                        start: new Date(y, m, 30),
-                        allDay: true,
-                        className: 'bgm-green'
-                    },
-                ]
+                    //Generate the Calendar
+                    $('#calendar').fullCalendar({
+                        header: {
+                            right: '',
+                            center: 'title',
+                            left: ''
+                        },
+
+                        theme: true, //Do not remove this as it ruin the design
+                        selectable: false,
+                        selectHelper: true,
+                        editable: false,
+                        defaultView: 'agendaDay',
+
+                        //Add Events
+                        events: agendaList,
+                        eventClick: function(calEvent, jsEvent, view) {
+                            var id = calEvent.id;
+                            var data = agendaData[id];
+
+                            $('#show-eventDetail').modal('show');
+                            $("#bdgEvent-name").text(data.surat_pengundang);
+                            $("#bdgEvent-start").text(calEvent.start.format('HH:mm on dddd, D MMMM YYYY'));
+                            calEvent.end ? $("#bdgEvent-end").text(calEvent.end.format('HH:mm on dddd, D MMMM YYYY')) : $("#bdgEvent-end").text("Unknown");
+
+                            $("#bdgEvent-from").text(data.surat_nama.charAt(0).toUpperCase() + data.surat_nama.slice(1));
+                            $("#bdgEvent-location").text(data.surat_pengundang);
+                            $("#bdgEvent-address").text(data.surat_tempat);
+                        }
+                    });
+                }
             });
 
             //Event Tag Selector
@@ -283,10 +232,6 @@
                     $(this).addClass('selected');
                 });
             })();
-
-            $.getJSON('http://whateverorigin.org/get?url=' + encodeURIComponent('https://jadwal.velotek.co.id/api/v1/get-undangan') + '&callback=?', function(data){
-                alert(data);
-            });
 
             //Add new Event
             $('body').on('click', '#addEvent', function(){
@@ -304,23 +249,13 @@
 
                     },true ); //Stick the event
 
-                    $('#addNew-event form')[0].reset()
-                    $('#addNew-event').modal('hide');
+                    $('#show-eventDetail form')[0].reset()
+                    $('#show-eventDetail').modal('hide');
                 }
 
                 else {
                     $('#eventName').closest('.form-group').addClass('has-error');
                 }
-            });
-
-            //Calendar views
-            $('body').on('click', '#fc-actions [data-view]', function(e){
-                e.preventDefault();
-                var dataView = $(this).attr('data-view');
-
-                $('#fc-actions li').removeClass('active');
-                $(this).parent().addClass('active');
-                cId.fullCalendar('changeView', dataView);
             });
         });
     </script>

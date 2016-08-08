@@ -17,7 +17,7 @@ router.get('/', (req, res) => {
 		});
 		r.on('end', () => {
 			jsonData = JSON.parse(data);
-			res.json({ data: jsonData });
+			res.json({ total: jsonData.result.length, data: jsonData });
 		});
 	});
 });

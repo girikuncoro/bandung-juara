@@ -57,12 +57,15 @@
             $("#auth").hide();
         });
 
-        $("a.btn-login").on("click", function() {
-            if(validAuth($("#user").val(), $("#pass").val())) {
-                window.location.href = "panic.html";
-            } else {
-                $("#auth").slideDown();
+        $(document).keyup(function(e){
+            if(e.keyCode == 13)
+            {
+                validate($("#user").val(), $("#pass").val());
             }
+        });
+
+        $("a.btn-login").on("click", function() {
+            validate($("#user").val(), $("#pass").val());
         });
 
         $("#user").focus(function() {
@@ -74,8 +77,15 @@
         });
 
         function validAuth(user, pass) {
-            console.log(user); console.log(pass);
             return user === validUser && pass === validPass;
+        }
+
+        function validate(user, pass) {
+            if(validAuth(user, pass)) {
+                window.location.href = "/panic";
+            } else {
+                $("#auth").slideDown();
+            }
         }
 
     </script>

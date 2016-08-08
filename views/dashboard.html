@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Walikota Dashboard</title>
+
+  <!-- Vendor CSS -->
+  <link href="vendors/bower_components/animate.css/animate.min.css" rel="stylesheet">
+  <link href="vendors/bower_components/material-design-iconic-font/dist/css/material-design-iconic-font.min.css" rel="stylesheet">
+  <link href="vendors/bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.min.css" rel="stylesheet">
+  <link href="vendors/bootgrid/jquery.bootgrid.min.css" rel="stylesheet">
+
+  <!-- CSS -->
+  <link href="css/app-1.css" rel="stylesheet">
+  <link href="css/app-2.css" rel="stylesheet">
+
+</head>
+<body>
+  <header id="header" class="clearfix" data-ma-theme="indigo">
+      <ul class="h-inner">
+          <li class="hi-trigger ma-trigger" data-ma-action="sidebar-open" data-ma-target="#sidebar">
+              <div class="line-wrap">
+                  <div class="line top"></div>
+                  <div class="line center"></div>
+                  <div class="line bottom"></div>
+              </div>
+          </li>
+
+          <li class="hi-logo hidden-xs">
+              <a href="index.html">Bandung Command Center</a>
+          </li>
+      </ul>
+
+  </header>
+
+  <section id="main">
+      <aside id="sidebar" class="sidebar c-overflow">
+          <div class="s-profile">
+              <a href="" data-ma-action="profile-menu-toggle">
+                  <div class="sp-pic">
+                      <img src="img/profile-pics/1.jpg" alt="">
+                  </div>
+
+                  <div class="sp-info">
+                      Ridwan Kamil
+
+                      <i class="zmdi zmdi-caret-down"></i>
+                  </div>
+              </a>
+
+              <ul class="main-menu">
+                  <li>
+                      <a href="/"><i class="zmdi zmdi-time-restore"></i> Logout</a>
+                  </li>
+              </ul>
+          </div>
+
+          <ul class="main-menu">
+              <li class="active">
+                  <a href="#"><i class="zmdi zmdi-home"></i> Home</a>
+              </li>
+              <li>
+                  <a href="/calendar"><i class="zmdi zmdi-calendar"></i> Calendar</a>
+              </li>
+              <li class="sub-menu">
+                  <a href="" data-ma-action="submenu-toggle"><i class="zmdi zmdi-view-compact"></i> Analytics</a>
+
+                  <ul>
+                      <li ><a href="/panic">Panic Button</a></li>
+                      <li><a href="#">Birth/Infant</a></li>
+                      <li><a href="#">Crimes</a></li>
+                  </ul>
+              </li>
+          </ul>
+      </aside>
+  </section>
+
+  <footer id="footer">
+      Copyright &copy; 2016 Bandung Command Center
+
+      <ul class="f-menu">
+          <li><a href="">Support</a></li>
+          <li><a href="">Contact</a></li>
+      </ul>
+  </footer>
+
+  <!-- Page Loader -->
+  <div class="page-loader">
+      <div class="preloader pls-blue">
+          <svg class="pl-circular" viewBox="25 25 50 50">
+              <circle class="plc-path" cx="50" cy="50" r="20" />
+          </svg>
+
+          <p>Please wait...</p>
+      </div>
+  </div>
+
+  <!-- Javascript Libraries -->
+  <script src="vendors/bower_components/jquery/dist/jquery.min.js"></script>
+  <script src="vendors/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script src="vendors/bower_components/d3/d3.min.js"></script>
+
+  <script src="vendors/sparklines/jquery.sparkline.min.js"></script>
+  <script src="vendors/bower_components/Waves/dist/waves.min.js"></script>
+  <script src="vendors/bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js"></script>
+  <script src="vendors/bootgrid/jquery.bootgrid.updated.min.js"></script>
+
+  <!-- Application script -->
+  <script src="js/app-1.js"></script>
+
+</body>
+</html>

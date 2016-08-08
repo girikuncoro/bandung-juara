@@ -20,7 +20,8 @@ app.use(express.static(__dirname + '/public')); //Add connection to the public f
 /**
  * Primary app routes.
  */
-app.use('/', require('./routes/index'));
+app.use('/', require('./routes/login'));
+app.use('/dashboard', require('./routes/dashboard'));
 app.use('/panic', require('./routes/panic'));
 app.use('/calendar', require('./routes/calendar'));
 
