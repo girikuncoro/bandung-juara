@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Walikota Dashboard</title>
+
+    <!-- Vendor CSS -->
+    <link href="vendors/bower_components/animate.css/animate.min.css" rel="stylesheet">
+    <link href="vendors/bower_components/material-design-iconic-font/dist/css/material-design-iconic-font.min.css" rel="stylesheet">
+    <link href="vendors/bower_components/fullcalendar/dist/fullcalendar.min.css" rel="stylesheet">
+    <link href="vendors/bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.min.css" rel="stylesheet">
+
+    <!-- CSS -->
+    <link href="css/app-1.css" rel="stylesheet">
+    <link href="css/app-2.css" rel="stylesheet">
+</head>
+
+<body>
+  <header id="header" class="clearfix" data-ma-theme="indigo">
+      <ul class="h-inner">
+          <li class="hi-trigger ma-trigger" data-ma-action="sidebar-open" data-ma-target="#sidebar">
+              <div class="line-wrap">
+                  <div class="line top"></div>
+                  <div class="line center"></div>
+                  <div class="line bottom"></div>
+              </div>
+          </li>
+
+          <li class="hi-logo hidden-xs">
+              <a href="/panic">Bandung Command Center</a>
+          </li>
+      </ul>
+
+  </header>
+
+    <section id="main">
+        <aside id="sidebar" class="sidebar c-overflow">
+          <div class="s-profile">
+              <a href="" data-ma-action="profile-menu-toggle">
+                  <div class="sp-pic">
+                      <img src="img/profile-pics/1.jpg" alt="">
+                  </div>
+
+                  <div class="sp-info">
+                      Ridwan Kamil
+
+                      <i class="zmdi zmdi-caret-down"></i>
+                  </div>
+              </a>
+
+              <ul class="main-menu">
+                  <li>
+                      <a href="/"><i class="zmdi zmdi-time-restore"></i> Logout</a>
+                  </li>
+              </ul>
+          </div>
+
+          <ul class="main-menu">
+              <li>
+                  <a href="/dashboard"><i class="zmdi zmdi-home"></i> Home</a>
+              </li>
+              <li class="active">
+                  <a href="/calendar"><i class="zmdi zmdi-calendar"></i> Calendar</a>
+              </li>
+              <li class="sub-menu">
+                  <a href="" data-ma-action="submenu-toggle"><i class="zmdi zmdi-view-compact"></i> Analytics</a>
+
+                  <ul>
+                      <li><a href="/panic">Panic Button</a></li>
+                      <li><a href="#">Birth/Infant</a></li>
+                      <li><a href="#">Crimes</a></li>
+                  </ul>
+              </li>
+          </ul>
+      </aside>
+
+        <section id="content">
+            <div class="container container-alt">
+                <div class="block-header">
+                    <h2>Calendar
+                        <small>Today's schedule.
+                        </small>
+                    </h2>
+                </div>
+
+                <div id="calendar" class="card"></div>
+
+                <!-- Add event -->
+                <div class="modal fade" id="show-eventDetail" data-backdrop="static" data-keyboard="false">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Today's Event from <span id="bdgEvent-name"></span></h4>
+                            </div>
+                            <div class="modal-body">
+                                <form class="addEvent" role="form">
+                                    <div class="form-group">
+                                        <label for="bdgEvent-from">Name</label>
+                                        <div class="fg-line p-b-10">
+                                            <span id="bdgEvent-from"></span>
+                                        </div>
+                                        <label for="bdgEvent-start">Start</label>
+                                        <div class="fg-line p-b-10">
+                                            <span id="bdgEvent-start"></span>
+                                        </div>
+                                        <label for="bdgEvent-end">End</label>
+                                        <div class="fg-line p-b-10">
+                                            <span id="bdgEvent-end"></span>
+                                        </div>
+                                        <label for="bdgEvent-location">Location</label>
+                                        <div class="fg-line p-b-10">
+                                            <span id="bdgEvent-location"></span>
+                                        </div>
+                                        <label for="bdgEvent-address">Address</label>
+                                        <div class="fg-line p-b-10">
+                                            <span id="bdgEvent-address"></span>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </section>
+
+    <footer id="footer">
+      Copyright &copy; 2016 Bandung Command Center
+
+      <ul class="f-menu">
+          <li><a href="">Support</a></li>
+          <li><a href="">Contact</a></li>
+      </ul>
+  </footer>
+
+    <!-- Page Loader -->
+    <div class="page-loader">
+        <div class="preloader pls-blue">
+            <svg class="pl-circular" viewBox="25 25 50 50">
+                <circle class="plc-path" cx="50" cy="50" r="20" />
+            </svg>
+
+            <p>Please wait...</p>
+        </div>
+    </div>
+
+    <!-- Javascript Libraries -->
+    <script src="vendors/bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="vendors/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <script src="vendors/bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script src="vendors/bower_components/Waves/dist/waves.min.js"></script>
+    <script src="vendors/bower_components/moment/min/moment.min.js"></script>
+    <script src="vendors/bower_components/fullcalendar/dist/fullcalendar.min.js"></script>
+
+    <script src="js/app-1.js"></script>
+
+    <script type="text/javascript">
+        const baseUrl = "//jadwal.velotek.co.id/api/v1/get-undangan";  // today's schedule
+        const colors = ['bgm-cyan', 'bgm-orange', 'bgm-green','bgm-purple',];
+        var agendaData;
+
+        $(document).ready(function() {
+            $.ajax({
+                url: "/api/v1/agenda",
+                type: "GET",
+                success: function(res) {
+                    console.log(res);
+
+                    var agendaList = [];
+                    agendaData = res.data.result;
+
+                    agendaData.forEach(function(d,i) {
+                        var timeStart = d.surat_waktu_acara.split(" "),
+                            timeStart = timeStart[0]+'T'+timeStart[1];
+                        var timeEnd = d.surat_waktuend.split(" "),
+                            timeEnd = timeEnd[0]+'T'+timeEnd[1];
+
+                        agendaList.push({
+                            id: i,
+                            title: d.surat_pengundang,
+                            start: timeStart,
+                            end: timeEnd,
+                            className: colors[i % colors.length],
+                            allDay: false
+                        });
+                    });
+
+                    //Generate the Calendar
+                    $('#calendar').fullCalendar({
+                        header: {
+                            right: '',
+                            center: 'title',
+                            left: ''
+                        },
+
+                        theme: true, //Do not remove this as it ruin the design
+                        selectable: false,
+                        selectHelper: true,
+                        editable: false,
+                        defaultView: 'agendaDay',
+
+                        //Add Events
+                        events: agendaList,
+                        eventClick: function(calEvent, jsEvent, view) {
+                            var id = calEvent.id;
+                            var data = agendaData[id];
+
+                            $('#show-eventDetail').modal('show');
+                            $("#bdgEvent-name").text(data.surat_pengundang);
+                            $("#bdgEvent-start").text(calEvent.start.format('HH:mm on dddd, D MMMM YYYY'));
+                            calEvent.end ? $("#bdgEvent-end").text(calEvent.end.format('HH:mm on dddd, D MMMM YYYY')) : $("#bdgEvent-end").text("Unknown");
+
+                            $("#bdgEvent-from").text(data.surat_nama.charAt(0).toUpperCase() + data.surat_nama.slice(1));
+                            $("#bdgEvent-location").text(data.surat_pengundang);
+                            $("#bdgEvent-address").text(data.surat_tempat);
+                        }
+                    });
+                }
+            });
+
+            //Event Tag Selector
+            (function(){
+                $('body').on('click', '.event-tag > span', function(){
+                    $('.event-tag > span').removeClass('selected');
+                    $(this).addClass('selected');
+                });
+            })();
+
+            //Add new Event
+            $('body').on('click', '#addEvent', function(){
+                var eventName = $('#eventName').val();
+                var tagColor = $('.event-tag > span.selected').attr('data-tag');
+
+                if (eventName != '') {
+                    //Render Event
+                    $('#calendar').fullCalendar('renderEvent',{
+                        title: eventName,
+                        start: $('#getStart').val(),
+                        end:  $('#getEnd').val(),
+                        allDay: true,
+                        className: tagColor
+
+                    },true ); //Stick the event
+
+                    $('#show-eventDetail form')[0].reset()
+                    $('#show-eventDetail').modal('hide');
+                }
+
+                else {
+                    $('#eventName').closest('.form-group').addClass('has-error');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
