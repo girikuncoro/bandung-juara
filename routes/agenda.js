@@ -16,8 +16,13 @@ router.get('/', (req, res) => {
 			data += chunk;
 		});
 		r.on('end', () => {
-			jsonData = JSON.parse(data);
-			res.json({ total: jsonData.result.length, data: jsonData });
+			try {
+				jsonData = JSON.parse(data);
+				res.json({ total: jsonData.result.length, data: jsonData });
+			} catch(err) {
+				console.log(err);
+				res.json({ total: 0, data: null });
+			}
 		});
 	});
 });
